@@ -1,0 +1,26 @@
+{
+  "name": "bot-tw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dvpfran/bot-tw.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dvpfran/bot-tw/issues"
+  },
+  "homepage": "https://github.com/dvpfran/bot-tw#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "ws": "^7.3.1"
+  }
+}
