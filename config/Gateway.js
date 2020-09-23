@@ -1,7 +1,8 @@
 const process = require('process');
+const config = require('config');
 const WebSocket = require("ws");
-const { GatewayOPCodes } = require('./Enums');
 
+const { GatewayOPCodes } = require('./Enums');
 let ws = null;
 
 function wsOpen() {
@@ -34,7 +35,7 @@ function sendIdentify() {
     const identify = {
         "op": GatewayOPCodes.IDENTIFY,
         "d": {
-            "token": "NzU2NzYyNTQxMDc3ODIzNTY4.X2WkCQ.VsLjZg4Vn8ZVetU5ldomfLnRy0M",
+            "token": config.get('GatewayConfig.token'),
             "properties": {
                 "$os": process.platform,
                 "$browser": "disco",
@@ -55,7 +56,7 @@ function startTimerHearbeat(heartbeat_interval){
 
 module.exports = {
     initialize: function() {
-        ws = new WebSocket('wss://gateway.discord.gg/?v=6&encoding=json', {});
+        ws = new WebSocket(config.get('GatewayConfig.address'), {});
         ws.on('open', wsOpen);
         ws.on('message', wsMessage);
         ws.on('error', wsError);
