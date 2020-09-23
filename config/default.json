@@ -1,8 +1,0 @@
-{
-    "GatewayConfig": {
-        "token": "my_token"
-    },
-    "WebhookConfig": {
-        "url": "my_url"
-    }
-}
