@@ -1,11 +1,11 @@
 const fetch = require('node-fetch');
+const fs = require('fs');
 
 const { TribalWarsInfoType } = require('./config/Enums');
 const { TribalWarsInfo } = require('./config/TribalWars');
 
-function requestInfo(type) {
-    const url = TribalWarsInfo.url;
-    let urlParam = null;
+function getUrlParam(type) {
+    let urlParam = '';
 
     switch(type) {
         case TribalWarsInfoType.WORLD:
@@ -48,24 +48,38 @@ function requestInfo(type) {
             urlParam = TribalWarsInfo.conquer;
             break;
     }
-
-    fetch(`${url}${urlParam}`,  {
-        'method': 'GET',
-        'headers': {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Host': url.substr("https://".length),
-        },
-    })
-    .then(response => response.text())
-    .then(data => {
-        console.log(data);
-    });
+    return urlParam;
 }
 
 module.exports = {
     getInfo: function(type) {
-        requestInfo(type);
+        return new Promise((resolve, recjet) => {
+            const url = TribalWarsInfo.url;
+            let urlParam = getUrlParam(type);
+            
+            fetch(`${url}${urlParam}`,  {
+                'method': 'GET',
+                'headers': {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Host': url.substr("https://".length),
+                },
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data) {
+                    const info = data.split('\n');
+                    resolve(decodeURI(info).split('+').join(' '));
+                }
+                else {
+                    resolve('Ups, erro');
+                }
+            });
+        });
+    },
+    getInfoFile: function() {
+        var data = fs.readFileSync('./data_received/player.txt', 'utf8');
+        return decodeURI(data).split('+').join('+', ' ');
     },
 }
