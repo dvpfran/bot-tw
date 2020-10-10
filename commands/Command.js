@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 const Player = require('./Player');
+const Help = require('./Help');
 
 function checkCommandType(content) {
     // 'player', 'points top5'
@@ -16,6 +17,9 @@ function checkCommandType(content) {
                 break;
         }
     }
+	else if (content.length <= 1 && content[0] == '!help') {
+		Help.sendHelp();
+	}
 }
 
 function get() {
