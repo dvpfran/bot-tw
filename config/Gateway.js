@@ -3,7 +3,16 @@ const config = require('config');
 const WebSocket = require("ws");
 
 const { GatewayOPCodes } = require('./Enums');
+const Command = require('../commands/Command');
 let ws = null;
+
+function initialize() {
+    ws = new WebSocket(config.get('GatewayConfig.address'), {});
+    ws.on('open', wsOpen);
+    ws.on('message', wsMessage);
+    ws.on('error', wsError);
+    ws.on('close', wsClose);
+};
 
 function wsOpen() {
     console.log('ws open');
@@ -15,6 +24,13 @@ function wsMessage(data) {
     if (data.op === GatewayOPCodes.HELLO) {
         sendIdentify();
         startTimerHearbeat(data.d.heartbeat_interval);
+    }
+    else if (data.op === GatewayOPCodes.EVENT) {
+        if (data.t === 'MESSAGE_CREATE') {
+            if (data.d.content.startsWith('!')) {
+                Command.checkCommand(data.d.content);
+            }
+        }
     }
 }
 
@@ -54,15 +70,5 @@ function startTimerHearbeat(heartbeat_interval){
     }, heartbeat_interval);
 }
 
-module.exports = {
-    initialize: function() {
-        ws = new WebSocket(config.get('GatewayConfig.address'), {});
-        ws.on('open', wsOpen);
-        ws.on('message', wsMessage);
-        ws.on('error', wsError);
-        ws.on('close', wsClose);
-    },
-    sendMessage: function(data) {
-        wsSend(data);
-    }
-}
+module.exports.initialize = initialize;
+module.exports.sendMessage = wsSend;

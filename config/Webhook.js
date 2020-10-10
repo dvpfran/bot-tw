@@ -7,7 +7,7 @@ function sendWebhookMessage(message) {
         'headers': {
             'content-type': 'application/json',
         },
-        'body': JSON.stringify(msg),
+        'body': JSON.stringify({'content': message}),
     })
     .then((response) => {
         console.log('response:', response);

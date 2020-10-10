@@ -1,5 +1,8 @@
+const Webhook = require('../config/Webhook');
+const Command = require('./Command');
 const TribalWars = require('../TribalWars');
-const { TribalWarsInfoType } = require('../config/Enums');
+const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
+
 
 class Player {
     constructor(id, name, tribe_id, villages, points, rank) {
@@ -22,7 +25,6 @@ let listPlayers = [];
 let lastSort = SortType.RANK; // sort rank by default
 
 function sortPlayers(sortType) {
-    console.log('entrou: ', sortType);
     switch(sortType) {
         case SortType.RANK:
             listPlayers.sort((a, b) => {
@@ -69,9 +71,16 @@ function getTopVillage(number) {
 function getTopPoints(number) {
     lastSort !== SortType.POINTS && sortPlayers(SortType.POINTS);
     lastSort = SortType.POINTS;
+
+    let topPoints = '';
     for(let index = 0; index < number; index++) {
-        console.log(listPlayers[index].rank, listPlayers[index].points, listPlayers[index].villages, listPlayers[index].name);
+        topPoints += `${listPlayers[index].rank}, ${listPlayers[index].points}, ${listPlayers[index].villages}, ${listPlayers[index].name}\n`;
     }
+    send(topPoints);
+}
+
+function send(content) {
+    Webhook.sendMessage(content);
 }
 
 function getName(name) {
@@ -97,7 +106,7 @@ module.exports = {
         sortPlayers(SortType.RANK);
     },
     checkCommand: function(args) {
-        args = args.split(' ');
+        console.log('args:', args);
         const filterType = args[0];
         const filter = args[1];
 
