@@ -6,17 +6,26 @@ class Conquer {
 	constructor(village_id, unix_timestamp, new_owner, old_owner) {
 		this.village_id = village_id;
 		this.date_string = this.convertTimeStampToDate(unix_timestamp);
+		this.hours_string = this.convertTimeStampToHours(unix_timestamp);
 		this.unix_timestamp = unix_timestamp; 
 		this.new_owner = new_owner;
 		this.old_owner = old_owner;
 	}
 
-	convertTimeStampToDate(timestamp) {
+	convertTimeStampToHours(timestamp) {
 		const date = new Date(timestamp * 1000);
 		const hours = '0' + date.getHours();
 		const minutes = '0' + date.getMinutes();
 		const seconds = '0' + date.getSeconds();
 		return `${hours.substr(-2)}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
+	}
+
+	convertTimeStampToDate(timestamp) {
+		const date = new Date(timestamp * 1000);
+		const day = date.getDate();
+		const month = date.getMonth();
+		const year = date.getFullYear();
+		return new Date(year, month, day);
 	}
 }
 
@@ -38,10 +47,15 @@ function getConquers() {
 
 function checkNewConquers() {
 	setInterval(() => {
-		console.log('Verificar novas conquistas');
+		const date = new Date();
+		const hours = '0' + date.getHours();
+		const minutes = '0' + date.getMinutes();
+		const seconds = '0' + date.getSeconds();
+		console.log(`${hours.substr(-2)}:${minutes.substr(-2)}:${seconds.substr(-2)} -Verificar novas conquistas`);
 		getConquers();
 	}, 30000);
 }
 
 module.exports.getConquers = getConquers;
 module.exports.checkNewConquers = checkNewConquers;
+module.exports.listConquers = listConquers;

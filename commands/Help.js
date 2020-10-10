@@ -7,6 +7,9 @@ const listHelp = [
 	'!player points top[number]',
 	'!player village top[number]',
 	'!player rank top[number]',
+	'!conquer last[number]',
+	'!conquer today',
+	'!conquer [date]',
 ];
 
 module.exports = {
