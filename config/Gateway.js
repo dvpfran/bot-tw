@@ -19,7 +19,7 @@ function wsOpen() {
 }   
 
 function wsMessage(data) {
-    console.log('received message:', data);
+    // console.log('received message:', data);
     data = JSON.parse(data);
     if (data.op === GatewayOPCodes.HELLO) {
         sendIdentify();

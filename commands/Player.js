@@ -1,8 +1,7 @@
 const Webhook = require('../config/Webhook');
 const Command = require('./Command');
-const TribalWars = require('../TribalWars');
+const TribalWars = require('../TribalWars/TribalWars');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
-
 
 class Player {
     constructor(id, name, tribe_id, villages, points, rank) {

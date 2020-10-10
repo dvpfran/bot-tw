@@ -1,6 +1,6 @@
 const Webhook = require('../config/Webhook');
 const Command = require('./Command');
-const TribalWars = require('../TribalWars');
+const TribalWars = require('../TribalWars/TribalWars');
 
 const intro = 'List of Commands that you can use:\n';
 const listHelp = [
