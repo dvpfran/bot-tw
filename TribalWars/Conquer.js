@@ -50,7 +50,7 @@ function checkNewConquers() {
 		const seconds = '0' + date.getSeconds();
 		console.log(`${hours.substr(-2)}:${minutes.substr(-2)}:${seconds.substr(-2)} -Verificar novas conquistas`);
 		getConquers();
-	}, 30000);
+	}, 100000);
 }
 
 module.exports.getConquers = getConquers;
