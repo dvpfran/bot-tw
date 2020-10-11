@@ -1,6 +1,7 @@
 const Webhook = require('../config/Webhook');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
+const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
 
 class Player {
@@ -54,32 +55,51 @@ function sortPlayers(sortType) {
 function getTopRank(number) {
     lastSort !== SortType.RANK && sortPlayers(SortType.RANK);
     lastSort = SortType.RANK;
+	let listTopRank = [];
     for(let index = 0; index < number; index++) {
-        console.log(listPlayers[index].rank, listPlayers[index].points, listPlayers[index].villages, listPlayers[index].name);
+       	listTopRank.push(generateArrayPlayer(listPlayers[index]));
     }
+	sendPlayers(number, listTopRank);
 }
 
 function getTopVillage(number) {
     lastSort !== SortType.VILLAGES && sortPlayers(SortType.VILLAGES);
     lastSort = SortType.VILLAGES;
+	let listTopVillages = [];
     for(let index = 0; index < number; index++) {
-        console.log(listPlayers[index].rank, listPlayers[index].points, listPlayers[index].villages, listPlayers[index].name);
+		listTopVillages.push(generateArrayPlayer(listPlayers[index]));
     }
+	sendPlayers(number, listTopVillages);
 }
 
 function getTopPoints(number) {
     lastSort !== SortType.POINTS && sortPlayers(SortType.POINTS);
     lastSort = SortType.POINTS;
-
-    let topPoints = '';
-    for(let index = 0; index < number; index++) {
-        topPoints += `${listPlayers[index].rank}, ${listPlayers[index].points}, ${listPlayers[index].villages}, ${listPlayers[index].name}\n`;
-    }
-    send(topPoints);
+//    let topPoints = '';
+	let listTopPoints = [];
+	for(let index = 0; index < number; index++) {
+        //topPoints += generateStringPlayer(listPlayers[index]);
+		listTopPoints.push(generateArrayPlayer(listPlayers[index]));
+     }
+    sendPlayers(number, listTopPoints);
 }
 
-function send(content) {
-    Webhook.sendMessage(content);
+function generateStringPlayer(player) {
+	let message = `${player.rank}   ${player.points}   ${player.villages}   ${player.name}`;
+	return message + '\n';
+}
+
+function generateArrayPlayer(player) {
+	let list = [player.rank, player.points, player.villages, player.name];
+	return list;
+}
+
+function sendPlayers(count, players) {
+	Table.setInfoTable(players, ['Rank', 'Pontos', 'Aldeias', 'Nome']);
+	players = '```'+ Table.generateTable() + '```\n';
+	players = `**Número de Jogadores: ${count}**\n${players}`;
+	
+    Webhook.sendMessage(players);
 }
 
 function getName(name) {
