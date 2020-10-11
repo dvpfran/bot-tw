@@ -21,11 +21,8 @@ class Conquer {
 	}
 
 	convertTimeStampToDate(timestamp) {
-		const date = new Date(timestamp * 1000);
-		const day = date.getDate();
-		const month = date.getMonth();
-		const year = date.getFullYear();
-		return new Date(year, month, day);
+		const today = new Date(timestamp * 1000);
+		return new Date(today.getFullYear(), today.getMonth(), today.getDate());
 	}
 }
 
