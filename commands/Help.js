@@ -5,7 +5,7 @@ const TribalWars = require('../TribalWars/TribalWars');
 const intro = 'List of Commands that you can use:\n';
 const listHelp = [
 	'!player points top[number]',
-	'!player village top[number]',
+	'!player villages top[number]',
 	'!player rank top[number]',
 	'!conquer last[number]',
 	'!conquer today',

@@ -71,6 +71,7 @@ function getInfo(type) {
 			if (data) {
 				data = decodeURI(data).split('+').join(' ');
 				const info = data.split('\n');
+				info.splice(info.length - 1);
 				resolve(info);
 			}
 			else {
@@ -80,12 +81,6 @@ function getInfo(type) {
 	});
 }
 
-function getInfoFile() {
-	var data = fs.readFileSync('./data_received/player.txt', 'utf8');
-    return decodeURI(data).split('+').join('+', ' ');
-}
-
 module.exports.getInfo = getInfo;
-module.exports.getInfoFile = getInfoFile;
 module.exports.getConquers = Conquer.getConquers;
 module.exports.checkNewConquers = Conquer.checkNewConquers;

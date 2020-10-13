@@ -16,7 +16,6 @@ class Player {
 }
 
 const SortType = {
-    RANK: 0,
     POINTS: 1,
     VILLAGES: 2,
 };
@@ -26,19 +25,6 @@ let lastSort = SortType.RANK; // sort rank by default
 
 function sortPlayers(sortType) {
     switch(sortType) {
-        case SortType.RANK:
-            listPlayers.sort((a, b) => {
-                if (a.rank > b.rank) {
-                    return 1;
-                }
-                else if (a.rank < b.rank) {
-                    return -1;
-                }
-                else {
-                    return 0;
-                }
-            });
-            break;
         case SortType.POINTS:
             listPlayers.sort((a, b) => {
                 return b.points - a.points;
@@ -50,16 +36,6 @@ function sortPlayers(sortType) {
             });
             break;
     }
-}
-
-function getTopRank(number) {
-    lastSort !== SortType.RANK && sortPlayers(SortType.RANK);
-    lastSort = SortType.RANK;
-	let listTopRank = [];
-    for(let index = 0; index < number; index++) {
-       	listTopRank.push(generateArrayPlayer(listPlayers[index]));
-    }
-	sendPlayers(number, listTopRank);
 }
 
 function getTopVillage(number) {
@@ -75,18 +51,11 @@ function getTopVillage(number) {
 function getTopPoints(number) {
     lastSort !== SortType.POINTS && sortPlayers(SortType.POINTS);
     lastSort = SortType.POINTS;
-//    let topPoints = '';
 	let listTopPoints = [];
 	for(let index = 0; index < number; index++) {
-        //topPoints += generateStringPlayer(listPlayers[index]);
 		listTopPoints.push(generateArrayPlayer(listPlayers[index]));
      }
     sendPlayers(number, listTopPoints);
-}
-
-function generateStringPlayer(player) {
-	let message = `${player.rank}   ${player.points}   ${player.villages}   ${player.name}`;
-	return message + '\n';
 }
 
 function generateArrayPlayer(player) {
@@ -109,20 +78,13 @@ function getName(name) {
 module.exports = {
     fillList: function() {
         TribalWars.getInfo(TribalWarsInfoType.PLAYER).then((result) => { 
-            for(let index = 0; index < info.length; index++) {
+            for(let index = 0; index < result.length; index++) {
                 const item = result[index].split(',');
-                listPlayers.push(new Player(item[0], item[1], parseInt(item[2]), parseInt(item[3]), parseFloat(item[4]), parseInt(item[5])));
+				if (item) {
+	                listPlayers.push(new Player(item[0], item[1], parseInt(item[2]), parseInt(item[3]), parseFloat(item[4]), parseInt(item[5])));
+				}
             }
         });           
-    },
-    fillListFromFile: function() {
-        let info = TribalWars.getInfoFile().split('\n');
-
-        for(let index = 0; index < info.length; index++) {
-            const item = info[index].split(',');
-            listPlayers.push(new Player(item[0], item[1], parseInt(item[2]), parseInt(item[3]), parseFloat(item[4]), parseInt(item[5])));
-        }
-        sortPlayers(SortType.RANK);
     },
     checkCommand: function(args) {
         console.log('args:', args);
@@ -131,10 +93,7 @@ module.exports = {
 
         if (filter.includes('top')) {
             const number = parseInt(filter.substr('top'.length));
-            if (filterType === 'rank') {
-                getTopRank(number);
-            }
-            else if (filterType === 'village') {
+            if (filterType === 'villages') {
                 getTopVillage(number);
             }
             else if (filterType === 'points') {

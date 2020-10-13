@@ -11,7 +11,7 @@ app.listen(3000, () => {
     console.log('Server running on port 3000');
     Gateway.initialize();
 
-    Player.fillListFromFile();
+    Player.fillList();
 	TribalWars.getConquers();
 	TribalWars.checkNewConquers();
 });
