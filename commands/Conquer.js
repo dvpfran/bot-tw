@@ -31,8 +31,6 @@ function checkCommand(type) {
 
 		if (splitDate != null) {
 			const date = new Date(`${splitDate[0]}/${splitDate[1]}/${splitDate[2]}`);
-			
-			console.log(date);
 
 			if (date != 'Invalid Date' && !isNaN(new Date(date))) {
 				getSpecificDateConquers(date);
