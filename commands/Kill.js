@@ -29,11 +29,11 @@ function getKillList(filterType, number) {
 	}
 	
 	if (infoType != null) {
-		listKill = [];
+		listKills = [];
 		TribalWars.getInfo(infoType).then((result) => {
 			for(let index = 0; index < result.length; index++) {
 				const item = result[index].split(',');
-				listKill.push(new Kill(item[0], item[1], item[2]));
+				listKills.push(new Kill(item[0], item[1], item[2]));
 			}
 		}).then(() => {
 			sortListKills();
@@ -44,7 +44,7 @@ function getKillList(filterType, number) {
 }
 
 function sortListKills() {
-	listKills.map((a, b) => {
+	listKills.sort((a, b) => {
 		return a.rank - b.rank;
 	});
 }
@@ -52,7 +52,7 @@ function sortListKills() {
 function sendKills(count) {
 	let listToSend = [];
 	for(let index = 0; index < count; index++) {
-		listToSend.push([listKill[index].rank, listKill[index].id, listKill[index].score.toString().replace(/\d(?=(?:\d{3})+$)/g, '$&.')]);
+		listToSend.push([listKills[index].rank, listKills[index].id, listKills[index].score.toString().replace(/\d(?=(?:\d{3})+$)/g, '$&.')]);
 	}
 	
 	Table.setInfoTable(listToSend, ['Rank', 'Nome', 'Derrotou']);
