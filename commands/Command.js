@@ -4,6 +4,7 @@ const Player = require('./Player');
 const Help = require('./Help');
 const Conquer = require('./Conquer');
 const Kill = require('./Kill');
+const KillTribe = require('./Kill_Tribe');
 
 function checkCommandType(content) {
     content = content.split(' ');
@@ -17,6 +18,9 @@ function checkCommandType(content) {
                 break;
 			case 'kill':
 				Kill.checkCommand(args);
+				break;
+			case 'kill_tribe':
+				KillTribe.checkCommand(args);
 				break;
         }
     }
