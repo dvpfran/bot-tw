@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 
+const WorldSettings = require('./World_Settings');
 const Player = require('./Player');
 const Help = require('./Help');
 const Conquer = require('./Conquer');
@@ -24,6 +25,11 @@ function checkCommandType(content) {
 				break;
         }
     }
+	else if (content.length == 2 && content[0] == '!world') {
+		if (content[1] === 'settings') {
+			WorldSettings.checkCommand(content[1]);
+		}
+	}
 	else if (content.length == 2 && content[0] == '!conquer') {
 		Conquer.checkCommand(content[1]);
 	}
