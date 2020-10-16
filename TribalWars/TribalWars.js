@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
-const fs = require('fs');
+
+const xml2js = require('xml2js');
 
 const Conquer = require('./Conquer');
 const { TribalWarsInfoType } = require('../config/Enums');
@@ -52,11 +53,11 @@ function getUrlParam(type) {
     return urlParam;
 }
 
-function getInfo(type) {
-	return new Promise((resolve, recjet) => {
+function getInfo(type, fileType = 'txt') {
+	return new Promise((resolve, reject) => {
    		const url = TribalWarsInfo.url;
         let urlParam = getUrlParam(type);
-            
+        console.log(`${url}${urlParam}`);  
         fetch(`${url}${urlParam}`,  {
         	'method': 'GET',
             'headers': {
@@ -66,17 +67,30 @@ function getInfo(type) {
 				'Host': url.substr("https://".length),
 			},
 		})
-		.then(response => response.text())
+		.then(response => response.text()) 
 		.then(data => {
-			if (data) {
+			if (data && fileType === 'txt') {
 				data = decodeURI(data).split('+').join(' ');
 				const info = data.split('\n');
 				info.splice(info.length - 1);
 				resolve(info);
 			}
+			else if (data && fileType === 'xml') {
+				const parser = new xml2js.Parser({ explicitArray: false, attrkey: 'ATTR' });
+				parser.parseString(data, (error, result) => {
+					if (error == null) {
+						resolve(result);
+					}
+					else {
+						console.log(error);
+					}
+				});
+			}
 			else {
 				resolve('Ups, erro');
 			}
+		}).catch(error => {
+			console.log('error:', error);
 		});
 	});
 }
