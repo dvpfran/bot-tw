@@ -4,6 +4,7 @@ const Gateway = require('./config/Gateway');
 const Command = require('./commands/Command');
 const WorldSettings = require('./commands/World_Settings');
 const WorldBuildings = require('./commands/World_Buildings');
+const WorldUnits = require('./commands/World_Units');
 const Player = require('./commands/Player');
 const TribalWars = require('./TribalWars/TribalWars');
 
@@ -15,6 +16,7 @@ app.listen(3000, () => {
 
 	WorldSettings.loadInfo();
 	WorldBuildings.loadInfo();
+	WorldUnits.loadInfo();
     Player.fillList();
 	TribalWars.getConquers();
 	TribalWars.checkNewConquers();

@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 
 const WorldSettings = require('./World_Settings');
 const WorldBuildings = require('./World_Buildings');
+const WorldUnits = require('./World_Units');
 const Player = require('./Player');
 const Help = require('./Help');
 const Conquer = require('./Conquer');
@@ -35,6 +36,9 @@ function checkCommandType(content) {
 		}
 		else if (content[1] === 'buildings') {
 			WorldBuildings.checkCommand(content[1]);
+		}
+		else if (content[1] === 'units') {
+			WorldUnits.checkCommand(content[1]);
 		}
 	}
 	else if (content.length == 2 && content[0] == '!conquer') {
