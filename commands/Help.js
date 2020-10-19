@@ -17,6 +17,8 @@ const listHelp = [
 	'!kill_tribe atack top[number]',
 	'!kill_tribe defense top[number]',
 	'!world settings',
+	'!world buildings [name]',
+	'!world units [name]',
 ];
 
 module.exports = {
