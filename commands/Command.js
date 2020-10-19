@@ -10,7 +10,8 @@ const Kill = require('./Kill');
 const KillTribe = require('./Kill_Tribe');
 
 function checkCommandType(content) {
-    content = content.split(' ');
+    console.log(content);
+	content = content.split(' ');
     if (content.length >= 3) {
         const commandType = content[0].substring(1);
         const args = [content[1], content[2]];
@@ -26,7 +27,14 @@ function checkCommandType(content) {
 				KillTribe.checkCommand(args);
 				break;
 			case 'world':
-				WorldBuildings.checkCommand(args);
+				switch(args[0]) {
+					case 'buildings':
+						WorldBuildings.checkCommand(args);
+						break;
+					case 'units':
+						WorldUnits.checkCommand(args);
+						break;
+				}
 				break;
         }
     }

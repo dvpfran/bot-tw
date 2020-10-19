@@ -34,7 +34,7 @@ function checkCommand(args) {
 			unit = worldUnits.marcher;
 			break;
 		case 'heavy':
-			unit = worldUnits.have;
+			unit = worldUnits.heavy;
 			break;
 		case 'ram':
 			unit = worldUnits.ram;
@@ -61,10 +61,13 @@ function prepareMessage(unitName, unit) {
 	let listToSend = [];
 	let columnsName = ['Unidade', 'Pop', 'Velocidade', 'Ataque', 'Defesa', 'Defesa Cavalaria', 'Defesa Arqueiro', 'Carga'];
 
-	/* sendMessage(message).then(() => {
-	   		sendMessage(message1);
-	   });
-	*/	
+	listToSend.push([unitName, unit.pop, unit.speed, unit.attack, unit.defense, unit.defense_cavalry, unit.defense_archer, unit.carry]);
+
+	Table.setInfoTable(listToSend, columnsName);
+	let message = `**Unidades**\n`;
+	message += '```'+ Table.generateTable() +'```\n';
+	
+	sendMessage(message);
 }
 
 function sendMessage(message) {
