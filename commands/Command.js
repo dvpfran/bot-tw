@@ -10,7 +10,6 @@ const Kill = require('./Kill');
 const KillTribe = require('./Kill_Tribe');
 
 function checkCommandType(content) {
-    console.log(content);
 	content = content.split(' ');
     if (content.length >= 3) {
         const commandType = content[0].substring(1);
