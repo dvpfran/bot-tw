@@ -35,7 +35,6 @@ function getConquers() {
 				const item = result[index].split(',');
 				if (listConquers.length === 0 || listConquers[listConquers.length - 1].unix_timestamp < item[1]) {
 					listConquers.push(new Conquer(parseInt(item[0]), parseInt(item[1]), parseInt(item[2]), parseInt(item[3])));
-					console.log(listConquers[listConquers.length - 1]);
 				}
 			}
 		}
@@ -48,7 +47,6 @@ function checkNewConquers() {
 		const hours = '0' + date.getHours();
 		const minutes = '0' + date.getMinutes();
 		const seconds = '0' + date.getSeconds();
-		console.log(`${hours.substr(-2)}:${minutes.substr(-2)}:${seconds.substr(-2)} -Verificar novas conquistas`);
 		getConquers();
 	}, 100000);
 }

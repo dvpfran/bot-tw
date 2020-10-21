@@ -1,5 +1,6 @@
 const express = require('express');
 const readline = require('readline');
+const config = require('config');
 
 const Gateway = require('./config/Gateway');
 const Webhook = require('./config/Webhook');
@@ -22,7 +23,7 @@ rl.on('line', (input) => {
 var app = express();
 
 app.listen(3000, () => {
-    console.log('Server running on port 3000');
+    console.log(`Server running on port 3000 - Debug Mode: ${config.get('debugMode')}`);
 
 	Gateway.initialize();
 
