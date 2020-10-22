@@ -1,6 +1,8 @@
 const Webhook = require('../config/Webhook');
-const TribalWars = require('../TribalWars/TribalWars');
+const TribalWars = require('./TribalWars');
 const { TribalWarsInfoType } = require('../config/Enums');
+const Player = require('../commands/Player');
+const Villages = require('./Villages');
 
 class Conquer {
 	constructor(village_id, unix_timestamp, new_owner, old_owner) {
@@ -28,17 +30,18 @@ class Conquer {
 
 let listConquers = [];
 
-function getConquers() {
-	TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
-		for(let index = 0; index < result.length; index++) {
-			if (result[index] !== '') {
-				const item = result[index].split(',');
-				if (listConquers.length === 0 || listConquers[listConquers.length - 1].unix_timestamp < item[1]) {
-					listConquers.push(new Conquer(parseInt(item[0]), parseInt(item[1]), parseInt(item[2]), parseInt(item[3])));
-				}
+function getConquers(result) {
+	for(let index = 0; index < result.length; index++) {
+		if (result[index] !== '') {
+			const item = result[index].split(',');
+			if (listConquers.length === 0 || listConquers[listConquers.length - 1].unix_timestamp < item[1]) {
+				const new_owner = Player.getName(item[2]);
+				const old_owner = Player.getName(item[3]);
+				const village_name = Villages.getName(item[0]);
+				listConquers.push(new Conquer(village_name, parseInt(item[1]), new_owner, old_owner));
 			}
 		}
-	});
+	}
 }
 
 function checkNewConquers() {
@@ -47,7 +50,10 @@ function checkNewConquers() {
 		const hours = '0' + date.getHours();
 		const minutes = '0' + date.getMinutes();
 		const seconds = '0' + date.getSeconds();
-		getConquers();
+		
+		TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
+			getConquers(result);
+		});
 	}, 100000);
 }
 
