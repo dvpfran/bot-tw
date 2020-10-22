@@ -10,6 +10,15 @@ const listHelp = [
 	'!conquer last[number]',
 	'!conquer today',
 	'!conquer [date]',
+	'!kill all top[number]',
+	'!kill atack top[number]',
+	'!kill defense top[number]',
+	'!kill_tribe all top[number]',
+	'!kill_tribe atack top[number]',
+	'!kill_tribe defense top[number]',
+	'!world settings',
+	'!world buildings [name]',
+	'!world units [name]',
 ];
 
 module.exports = {

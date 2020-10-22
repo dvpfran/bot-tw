@@ -6,32 +6,37 @@ const { GatewayOPCodes } = require('./Enums');
 const Command = require('../commands/Command');
 let ws = null;
 
+let debugMode = config.get('debugMode');
+
 function initialize() {
-    ws = new WebSocket(config.get('GatewayConfig.address'), {});
-    ws.on('open', wsOpen);
-    ws.on('message', wsMessage);
-    ws.on('error', wsError);
-    ws.on('close', wsClose);
-};
+	if (!debugMode) {
+    	ws = new WebSocket(config.get('GatewayConfig.address'), {});
+		ws.on('open', wsOpen);
+		ws.on('message', wsMessage);
+		ws.on('error', wsError);
+		ws.on('close', wsClose);
+	}
+}
 
 function wsOpen() {
     console.log('ws open');
 }   
 
 function wsMessage(data) {
-    // console.log('received message:', data);
     data = JSON.parse(data);
-    if (data.op === GatewayOPCodes.HELLO) {
-        sendIdentify();
-        startTimerHearbeat(data.d.heartbeat_interval);
-    }
-    else if (data.op === GatewayOPCodes.EVENT) {
-        if (data.t === 'MESSAGE_CREATE') {
-            if (data.d.content.startsWith('!')) {
-                Command.checkCommand(data.d.content);
-            }
-        }
-    }
+    if (!debugMode) {
+		if (data.op === GatewayOPCodes.HELLO) {
+        	sendIdentify();
+        	startTimerHearbeat(data.d.heartbeat_interval);
+    	}
+    	else if (data.op === GatewayOPCodes.EVENT) {
+        	if (data.t === 'MESSAGE_CREATE') {
+            	if (data.d.content.startsWith('!')) {
+                	Command.checkCommand(data.d.content);
+            	}
+        	}
+    	}
+	}
 }
 
 function wsError(data) {
@@ -43,8 +48,9 @@ function wsClose(data) {
 }
 
 function wsSend(data) {
-    console.log('enviou mensagem:', data);
-    ws.send(JSON.stringify(data));
+	if (!debugMode) {
+	    ws.send(JSON.stringify(data));
+	}
 }
 
 function sendIdentify() {

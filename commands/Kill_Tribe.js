@@ -1,6 +1,7 @@
 const Webhook = require('../config/Webhook');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
+const { formatNumber } =  require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
 
@@ -44,7 +45,6 @@ function getKillTribeList(filterType, number) {
 }
 
 function sortList() {
-	console.log(listKills);
 	listKills.sort((a, b) => {
 		return a.rank - b.rank;
 	});
@@ -53,7 +53,7 @@ function sortList() {
 function sendKills(count) {
 	let listToSend = [];
 	for(let index = 0; index < count; index++) {
-		listToSend.push([listKills[index].rank, listKills[index].id, listKills[index].score.toString().replace(/\d(?=(?:\d{3})+$)/g, '$&.')]);
+		listToSend.push([listKills[index].rank, listKills[index].id, formatNumber(listKills[index].score)]);
 	}
 
 	Table.setInfoTable(listToSend, ['Rank', 'Tribo', 'Derrotou']);

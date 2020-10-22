@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 const config = require('config');
 
+let debugMode = config.get('debugMode');
+
 function sendWebhookMessage(message) {
     fetch(config.get('WebhookConfig.url'), {
         'method': 'POST',
@@ -16,13 +18,12 @@ function sendWebhookMessage(message) {
 
 module.exports = {
     sendMessage: function(message) {
-        sendWebhookMessage(message);
+        if (!debugMode) {
+			sendWebhookMessage(message);
+		}
+		else {
+			console.log(message);
+		}
     }
 }
 
-// // const msg = {'content': 'Hello men, this is my first message from bot to discord channel.'};
-// function sendWebhookMessage() {
-
-// }
-
-// // sendWebhookMessage();

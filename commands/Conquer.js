@@ -67,7 +67,7 @@ function getLastConquers(count = 0) {
 function generateStringConquer(conquer) {
 	let message = `- ${conquer.new_owner} conquistou ${conquer.village_id}`;
 	let countConquers = 0;
-	if (conquer.old_owner != 0) {
+	if (conquer.old_owner !== undefined) {
 		 message += ` de ${conquer.old_owner}`;
 	}
 	return message + '\n';
