@@ -79,6 +79,14 @@ function sortAllies(type) {
 	});
 }
 
+function getName(id) {
+	let ally = listAllies.find(ally => ally.id == id);
+	if (ally !== undefined) {
+		return ally.name;
+	}
+	return undefined;
+}
+
 function sendAllies(listTop) {
 	let message = '';
 	Table.setInfoTable(listTop, ['Rank', 'Nome', 'Pontos', 'Membros', 'Aldeias']);
@@ -89,3 +97,4 @@ function sendAllies(listTop) {
 
 module.exports.fillList = fillList;
 module.exports.checkCommand = checkCommand;
+module.exports.getName = getName;

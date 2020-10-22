@@ -1,14 +1,16 @@
 const Webhook = require('../config/Webhook');
 const Command = require('./Command');
+const Ally = require('./Ally');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } =  require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
 
 class Kill_Tribe {
-	constructor(rank, id, score) {
+	constructor(rank, id, name, score) {
 		this.rank = rank;
 		this.id = id;
+		this.name = name;
 		this.score = score;
 	}
 }
@@ -34,7 +36,8 @@ function getKillTribeList(filterType, number) {
 		TribalWars.getInfo(infoType).then((result) => {
 			for(let index = 0; index < result.length; index++) {
 				const item = result[index].split(',');
-				listKills.push(new Kill_Tribe(item[0], item[1], item[2]));
+				const name = Ally.getName(item[1]);
+				listKills.push(new Kill_Tribe(item[0], item[1], name, item[2]));
 			}
 		}).then(() => {
 			sortList();
@@ -53,7 +56,7 @@ function sortList() {
 function sendKills(count) {
 	let listToSend = [];
 	for(let index = 0; index < count; index++) {
-		listToSend.push([listKills[index].rank, listKills[index].id, formatNumber(listKills[index].score)]);
+		listToSend.push([listKills[index].rank, listKills[index].name, formatNumber(listKills[index].score)]);
 	}
 
 	Table.setInfoTable(listToSend, ['Rank', 'Tribo', 'Derrotou']);
