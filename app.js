@@ -10,6 +10,7 @@ const WorldSettings = require('./commands/World_Settings');
 const WorldBuildings = require('./commands/World_Buildings');
 const WorldUnits = require('./commands/World_Units');
 const Player = require('./commands/Player');
+const Ally = require('./commands/Ally');
 const TribalWars = require('./TribalWars/TribalWars');
 const Villages = require('./TribalWars/Villages');
 
@@ -41,11 +42,15 @@ app.listen(3000, () => {
 				TribalWars.getInfo(TribalWarsInfoType.PLAYER).then((result) => {
 					Player.fillList(result);
 
-					TribalWars.getInfo(TribalWarsInfoType.VILLAGE).then((result) => {
+					TribalWars.getInfo(TribalWarsInfoType.ALLY).then((result) => {
+						Ally.fillList(result);
+
+						TribalWars.getInfo(TribalWarsInfoType.VILLAGE).then((result) => {
 						Villages.getVillages(result);
 							
-						TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
-							TribalWars.getConquers(result);
+							TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
+								TribalWars.getConquers(result);
+							});
 						});
 					});
 				});
