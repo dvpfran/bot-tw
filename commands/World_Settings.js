@@ -66,10 +66,8 @@ function sendMessage(message) {
 }
 
 module.exports = {
-	loadInfo: function() {
-		TribalWars.getInfo(TribalWarsInfoType.WORLD, 'xml').then((result) => {
-			worldSettings = result.config;
-		});
+	loadInfo: function(result) {
+		worldSettings = result;
 	},
 }
 

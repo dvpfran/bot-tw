@@ -16,18 +16,17 @@ class Player {
 }
 
 const SortType = {
-    POINTS: 1,
-    VILLAGES: 2,
+    RANK: 0,
+    VILLAGES: 1,
 };
 
 let listPlayers = [];
-let lastSort = SortType.RANK; // sort rank by default
 
 function sortPlayers(sortType) {
     switch(sortType) {
-        case SortType.POINTS:
+        case SortType.RANK:
             listPlayers.sort((a, b) => {
-                return b.points - a.points;
+				return a.rank - b.rank;
             });
             break;
         case SortType.VILLAGES:
@@ -39,8 +38,7 @@ function sortPlayers(sortType) {
 }
 
 function getTopVillage(number) {
-    lastSort !== SortType.VILLAGES && sortPlayers(SortType.VILLAGES);
-    lastSort = SortType.VILLAGES;
+	sortPlayers(SortType.VILLAGES);
 	let listTopVillages = [];
     for(let index = 0; index < number; index++) {
 		listTopVillages.push(generateArrayPlayer(listPlayers[index]));
@@ -49,8 +47,7 @@ function getTopVillage(number) {
 }
 
 function getTopPoints(number) {
-    lastSort !== SortType.POINTS && sortPlayers(SortType.POINTS);
-    lastSort = SortType.POINTS;
+	sortPlayers(SortType.RANK);
 	let listTopPoints = [];
 	for(let index = 0; index < number; index++) {
 		listTopPoints.push(generateArrayPlayer(listPlayers[index]));
@@ -71,23 +68,24 @@ function sendPlayers(count, players) {
     Webhook.sendMessage(players);
 }
 
-function getName(name) {
-
+function getName(id) {
+	const player = listPlayers.find(player => player.id === id);
+	if (player !== undefined) {
+		return player.name;
+	}
+	return undefined;
 }
 
 module.exports = {
-    fillList: function() {
-        TribalWars.getInfo(TribalWarsInfoType.PLAYER).then((result) => { 
-            for(let index = 0; index < result.length; index++) {
-                const item = result[index].split(',');
-				if (item) {
-	                listPlayers.push(new Player(item[0], item[1], parseInt(item[2]), parseInt(item[3]), parseFloat(item[4]), parseInt(item[5])));
-				}
-            }
-        });           
+    fillList: function(result) {
+    	for(let index = 0; index < result.length; index++) {
+            const item = result[index].split(',');
+			if (item) {
+	        	listPlayers.push(new Player(item[0], item[1], parseInt(item[2]), parseInt(item[3]), parseFloat(item[4]), parseInt(item[5])));
+			}
+    	}
     },
     checkCommand: function(args) {
-        console.log('args:', args);
         const filterType = args[0];
         const filter = args[1];
 
@@ -96,12 +94,11 @@ module.exports = {
             if (filterType === 'villages') {
                 getTopVillage(number);
             }
-            else if (filterType === 'points') {
+            else if (filterType === 'rank') {
                 getTopPoints(number);
             }
         }
-        else if (filterType === 'name') {
-            getName(filter);
-        }
     }
 }
+
+module.exports.getName = getName;

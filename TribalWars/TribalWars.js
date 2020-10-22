@@ -57,7 +57,7 @@ function getInfo(type, fileType = 'txt') {
 	return new Promise((resolve, reject) => {
    		const url = TribalWarsInfo.url;
         let urlParam = getUrlParam(type);
-        console.log(`${url}${urlParam}`);  
+        console.log(`[FETCH]: ${url}${urlParam}`);  
         fetch(`${url}${urlParam}`,  {
         	'method': 'GET',
             'headers': {
