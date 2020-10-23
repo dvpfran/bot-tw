@@ -55,10 +55,6 @@ function getTopRank(number) {
     sendPlayers(number, listTopRank);
 }
 
-function getPlayer(player) {
-	sendPlayers(1, [generateArrayPlayer(player)]); 
-}
-
 function generateArrayPlayer(player) {
 	let list = [player.rank, player.points, player.villages, player.name];
 	return list;
@@ -78,6 +74,10 @@ function getName(id) {
 		return player.name;
 	}
 	return undefined;
+}
+
+function getPlayerByName(name) {
+	return listPlayers.find(player => player.name.toLowerCase() === name.toLowerCase());
 }
 
 module.exports = {
@@ -104,12 +104,13 @@ module.exports = {
         }
 		else {
 			const player_name = args.toString().replace(',', ' ');
-			const player = listPlayers.find(player => player.name.toLowerCase() === player_name.toLowerCase());
+			const player = getPlayerByName(player_name);	
 			if (player !== undefined) {
-				getPlayer(player);
+				sendPlayers(1, [generateArrayPlayer(player)]); 
 			}
 		}
     }
 }
 
 module.exports.getName = getName;
+module.exports.getPlayerByName = getPlayerByName;

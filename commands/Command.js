@@ -29,6 +29,9 @@ function checkCommandType(content) {
 			case 'kill_ally':
 				KillTribe.checkCommand(args);
 				break;
+			case 'conquer':
+				Conquer.checkCommand(args);
+				break;
 			case 'world':
 				switch(args[0]) {
 					case 'buildings':

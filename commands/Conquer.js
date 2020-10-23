@@ -20,23 +20,30 @@ function checkCommand(type) {
 		}
 	}
 	else {
-		let splitDate = null;
-
-		if (type.includes('-')) { 
-			splitDate = type.split('-');			
-		} 
-		else if (type.includes('/')) {
-			splitDate = type.split('/');
+		const dateConquer = convertToValidDate(type);	
+		if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
+			getSpecificDateConquers(dateConquer);
 		}
-
-		if (splitDate != null) {
-			const date = new Date(`${splitDate[0]}/${splitDate[1]}/${splitDate[2]}`);
-
-			if (date != 'Invalid Date' && !isNaN(new Date(date))) {
-				getSpecificDateConquers(date);
-			}
-		}	
+		else {
+			const player_name = type.toString().replace(',', ' ');	
+			getPlayerConquers(player_name);
+		}
 	}
+}
+
+function convertToValidDate(type) {
+	let splitDate = null;
+	if (type.includes('-')) { 
+		splitDate = type.split('-');			
+	} 
+	else if (type.includes('/')) {
+		splitDate = type.split('/');
+	}
+
+	if (splitDate != null) {
+		const date = new Date(`${splitDate[0]}/${splitDate[1]}/${splitDate[2]}`);
+	}
+	return splitDate;
 }
 
 function getSpecificDateConquers(specificDate) {
@@ -62,6 +69,18 @@ function getLastConquers(count = 0) {
 		countConquers++;
 	}
 	sendConquers(countConquers, lastConquers);
+}
+
+function getPlayerConquers(name) {
+	let playerConquers = '';
+	let countConquers = 0;
+	
+	listConquers.filter(conquer => conquer.new_owner !== undefined && conquer.new_owner.toLowerCase() === name.toLowerCase()).map(conquer => {
+		playerConquers += generateStringConquer(conquer);
+		countConquers++;
+	});
+	
+	sendConquers(countConquers, playerConquers);
 }
 
 function generateStringConquer(conquer) {
