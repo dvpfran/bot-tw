@@ -6,6 +6,7 @@ const intro = 'List of Commands that you can use:\n';
 const listHelp = [
 	'!player villages top[number]',
 	'!player rank top[number]',
+	'!player [name]',
 	'!ally rank top[number]',
 	'!ally villages top[number]',
 	'!ally members top[number]',

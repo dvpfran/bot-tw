@@ -41,6 +41,9 @@ function checkCommandType(content) {
 				break;
         }
     }
+	else if (content.length == 2 && content[0] == '!player') {
+		Player.checkCommand(content[1]);
+	}
 	else if (content.length == 2 && content[0] == '!world') {
 		if (content[1] === 'settings') {
 			WorldSettings.checkCommand(content[1]);

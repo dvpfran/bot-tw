@@ -46,13 +46,17 @@ function getTopVillage(number) {
 	sendPlayers(number, listTopVillages);
 }
 
-function getTopPoints(number) {
+function getTopRank(number) {
 	sortPlayers(SortType.RANK);
-	let listTopPoints = [];
+	let listTopRank = [];
 	for(let index = 0; index < number; index++) {
-		listTopPoints.push(generateArrayPlayer(listPlayers[index]));
+		listTopRank.push(generateArrayPlayer(listPlayers[index]));
      }
-    sendPlayers(number, listTopPoints);
+    sendPlayers(number, listTopRank);
+}
+
+function getPlayer(player) {
+	sendPlayers(1, [generateArrayPlayer(player)]); 
 }
 
 function generateArrayPlayer(player) {
@@ -86,7 +90,7 @@ module.exports = {
     	}
     },
     checkCommand: function(args) {
-        const filterType = args[0];
+		const filterType = args[0];
         const filter = args[1];
 
         if (filter.includes('top')) {
@@ -95,9 +99,16 @@ module.exports = {
                 getTopVillage(number);
             }
             else if (filterType === 'rank') {
-                getTopPoints(number);
+                getTopRank(number);
             }
         }
+		else {
+			const player_name = args.toString().replace(',', ' ');
+			const player = listPlayers.find(player => player.name.toLowerCase() === player_name.toLowerCase());
+			if (player !== undefined) {
+				getPlayer(player);
+			}
+		}
     }
 }
 
