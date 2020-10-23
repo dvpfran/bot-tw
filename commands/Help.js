@@ -10,6 +10,7 @@ const listHelp = [
 	'!ally rank top[number]',
 	'!ally villages top[number]',
 	'!ally members top[number]',
+	'!ally [name] OR [tag]',
 	'!conquer last[number]',
 	'!conquer today',
 	'!conquer [date]',

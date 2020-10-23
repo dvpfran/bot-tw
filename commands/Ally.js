@@ -50,6 +50,14 @@ function checkCommand(args) {
 			getTopList(number, SortType.MEMBERS);
 		}
     }
+	else {
+		console.log(args);
+		const ally_name = args.toString().replace(',', ' ').toLowerCase();
+		const ally = listAllies.find(ally => ally.name.toLowerCase() === ally_name || ally.tag.toLowerCase() === ally_name);
+		if (ally !== undefined) {
+			getAlly(ally);
+		}
+	}
 }
 
 function getTopList(number, sortType) {
@@ -61,6 +69,10 @@ function getTopList(number, sortType) {
 		listTop.push([ally.rank, ally.name, formatNumber(ally.points), ally.members, ally.villages]);
 	}
 	sendAllies(listTop);
+}
+
+function getAlly(ally) {
+	sendAllies([[ally.rank, ally.name, formatNumber(ally.points), ally.members, ally.villages]]);
 }
 
 function sortAllies(type) {
