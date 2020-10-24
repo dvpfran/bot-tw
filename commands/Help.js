@@ -2,7 +2,7 @@ const Webhook = require('../config/Webhook');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 
-const intro = 'List of Commands that you can use:\n';
+const intro = '**List of Commands that you can use:**\n';
 const listHelp = [
 	'!player villages top[number]',
 	'!player rank top[number]',
@@ -27,10 +27,10 @@ const listHelp = [
 
 module.exports = {
 	sendHelp: function() {
-		let commands = '';
+		let commands = '```';
 		for (let index = 0; index < listHelp.length; index++) {
 			commands += `${listHelp[index]}\n`;
 		}
-		Webhook.sendMessage(intro + commands);
+		Webhook.sendMessage(intro + commands + '```');
 	}
 }
