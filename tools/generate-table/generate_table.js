@@ -3,39 +3,14 @@ let table = {
 };
 
 let columns = [];
-
 let data = [];
-
-/*let data = [
-	[
-		1, 1211364, 17, 'Jony Man'
-	],
-	[
-		2, 119765, 21, 'Camon Brah'
-	],
-	[
-		3, 114819, 17, 'Mike'
-	],
-	[
-		4, 106123, 18, 'Clarke'
-	],
-	[
-		5, 94365, 15, 'Goku',
-	]
-];*/
 
 function setInfoTable(infoData, infoColumns) {
 	columns = infoColumns;
 	data = infoData;	
 }
 
-function setColumnName() {
-	columns = ['Rank', 'Points', 'Wins', 'Name'];
-}
-
 function generateColumnsSize() {
-	console.log(columns);
-	console.log(data);
 	for(let indexColumn = 0; indexColumn < columns.length; indexColumn++) {	
 		let column_width = columns[indexColumn].length;
 		for(let indexData = 0; indexData < data.length; indexData++) {
@@ -63,7 +38,12 @@ function generateBorder() {
 }
 
 function generateRows() {
+	// splitedTable because the max chars === 2000
+	let splitedTable = [];
 	let generatedTable  = '';
+	
+	const total_column_width = table.column_width.reduce((accumulator, currentValue) => accumulator + currentValue);
+
 	for (let indexDataRow = 0; indexDataRow < data.length; indexDataRow++) {
 		generatedTable += generateBorder();
 
@@ -86,12 +66,17 @@ function generateRows() {
 		}
 
 		generatedTable += '|\n';
-
+		
 		if (indexDataRow == data.length - 1) {
 			generatedTable += generateBorder();
+			splitedTable.push(generatedTable);
+		}		
+		else if (total_column_width + generatedTable.length >= 1800) {
+			splitedTable.push(generatedTable);
+			generatedTable = '';
 		}
 	}
-	return generatedTable;
+	return splitedTable;
 }
 
 function alignCenterWord(word, indexColumn) {
@@ -135,7 +120,6 @@ function alignLeftWord(word, indexColumn) {
 }
 
 function generateTable() {
-	// setColumnName();
 	generateColumnsSize();
 	return generateRows();
 }
