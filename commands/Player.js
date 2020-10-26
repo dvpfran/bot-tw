@@ -62,10 +62,16 @@ function generateArrayPlayer(player) {
 
 function sendPlayers(count, players) {
 	Table.setInfoTable(players, ['Rank', 'Pontos', 'Aldeias', 'Nome']);
-	players = '```'+ Table.generateTable() + '```\n';
-	players = `**Número de Jogadores: ${count}**\n${players}`;
+
+	var splitedTable = Table.generateTable();
+
+	const messages = [];	
+	messages.push(`**Número de Jogadores: ${count}**`);
 	
-    Webhook.sendMessage(players);
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] + '```');
+	}
+	Webhook.sendMessage(messages);	
 }
 
 function getName(id) {

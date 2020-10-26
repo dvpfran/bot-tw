@@ -102,9 +102,17 @@ function getName(id) {
 function sendAllies(listTop) {
 	let message = '';
 	Table.setInfoTable(listTop, ['Rank', 'Nome', 'Pontos', 'Membros', 'Aldeias']);
-	message = `**Números de Tribos: ${listTop.length}\n`;
-	message += '```'+ Table.generateTable() +'```';
-	Webhook.sendMessage(message);
+
+	const splitedTable = Table.generateTable();
+
+	const messages = [];
+	messages.push(`**Números de Tribos: ${listTop.length}\n`);
+
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] +'```');
+	}
+
+	Webhook.sendMessage(messages);
 }
 
 module.exports.fillList = fillList;

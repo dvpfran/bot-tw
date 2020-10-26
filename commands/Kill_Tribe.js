@@ -60,9 +60,14 @@ function sendKills(count) {
 	}
 
 	Table.setInfoTable(listToSend, ['Rank', 'Tribo', 'Derrotou']);
-	let message = `**Número de Tribos: ${count}**\n`;
-	message += '```'+ Table.generateTable() +'```\n';
-	Webhook.sendMessage(message);
+
+	let messages = [`**Número de Tribos: ${count}**\n`];
+	let splitedTable = Table.generateTable();
+
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] +'```\n');
+	}
+	Webhook.sendMessage(messages);
 }
 
 module.exports = {

@@ -57,11 +57,16 @@ function sendKills(count) {
 	for(let index = 0; index < count; index++) {
 		listToSend.push([listKills[index].rank, listKills[index].player_name, formatNumber(listKills[index].score)]);
 	}
-	
+
 	Table.setInfoTable(listToSend, ['Rank', 'Nome', 'Derrotou']);
-	let message = `**Número de Jogadores: ${count}**\n`;
-	message += '```'+ Table.generateTable() +'```\n';
-	Webhook.sendMessage(message);
+	const splitedTable = Table.generateTable();
+	const messages = [];
+	messages.push(`**Número de Jogadores: ${count}**\n`);
+
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] +'```\n');
+	}
+	Webhook.sendMessage(messages);
 }
 
 module.exports = {	

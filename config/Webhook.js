@@ -24,7 +24,7 @@ function sendWebhookMessage(message) {
 				sendWebhookMessage(messages[indexMessage]);
 			}
 		});
-	}, 850);
+	}, 200);
 }
 
 module.exports = {
