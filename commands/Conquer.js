@@ -60,27 +60,19 @@ function getSpecificDateConquers(specificDate) {
 } 
 
 function getLastConquers(count = 0) {
-	let lastConquers = '';
-	let countConquers = 0;
+	let listLastConquers = [];
 	const conquersLength = listConquers.length - 1;
-
-	for(let index = conquersLength; index > (conquersLength - count); index--) {
-		lastConquers += generateStringConquer(listConquers[index]);
-		countConquers++;
+	for(let index = conquersLength; index > conquersLength - count; index--) {
+		listLastConquers.push(listConquers[index]);
 	}
-	sendConquers(countConquers, lastConquers);
+	const messages = prepareConquersToSend(listLastConquers);	
+	sendConquers(listLastConquers.length, messages);
 }
 
 function getPlayerConquers(name) {
-	let playerConquers = '';
-	let countConquers = 0;
-	
-	listConquers.filter(conquer => conquer.new_owner !== undefined && conquer.new_owner.toLowerCase() === name.toLowerCase()).map(conquer => {
-		playerConquers += generateStringConquer(conquer);
-		countConquers++;
-	});
-	
-	sendConquers(countConquers, playerConquers);
+	let listPlayerConquers = listConquers.filter(conquer => conquer.new_owner !== undefined && conquer.new_owner.toLowerCase() === name.toLowerCase());
+	const messages = prepareConquersToSend(listPlayerConquers);
+	sendConquers(listPlayerConquers.length, messages);
 }
 
 function generateStringConquer(conquer) {
@@ -92,10 +84,30 @@ function generateStringConquer(conquer) {
 	return message + '\n';
 }
 
-function sendConquers(count, conquers) {
-	conquers = '```' + conquers + '```';
-	conquers = `**Número de Conquistas: ${count}**\n${conquers}`;
-	Webhook.sendMessage(conquers.substring(0, 2000));	
+function prepareConquersToSend(listConquers) {
+	let listMessages = [];
+	let contentMessage = '';
+
+	listConquers.map((conquer, index = 0) => {
+		let generatedString = generateStringConquer(conquer);
+		if (contentMessage.length + generatedString.length >= 1800) {
+			listMessages.push(contentMessage);
+			contentMessage = generatedString;
+		}
+		else {
+			contentMessage += generatedString;
+			if (index + 1 === listConquers.length) {
+				listMessages.push(contentMessage);
+			}
+		}
+	});
+	return listMessages;
+}
+
+function sendConquers(count, messages) {
+	let listMessages = [`**Número de Conquistas: ${count}**\n`];
+	messages.map(message => listMessages.push('```'+ message +'```'));
+	Webhook.sendMessage(listMessages);	
 }
 
 module.exports.checkCommand = checkCommand;
