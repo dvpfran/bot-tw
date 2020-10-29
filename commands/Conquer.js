@@ -20,7 +20,7 @@ function checkCommand(type) {
 		}
 	}
 	else {
-		const dateConquer = convertToValidDate(type);	
+		const dateConquer = convertToValidDate(type);
 		if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
 			getSpecificDateConquers(dateConquer);
 		}
@@ -33,6 +33,8 @@ function checkCommand(type) {
 
 function convertToValidDate(type) {
 	let splitDate = null;
+	let date = null;
+
 	if (type.includes('-')) { 
 		splitDate = type.split('-');			
 	} 
@@ -41,22 +43,20 @@ function convertToValidDate(type) {
 	}
 
 	if (splitDate != null) {
-		const date = new Date(`${splitDate[0]}/${splitDate[1]}/${splitDate[2]}`);
+		date = new Date(`${splitDate[1]}/${splitDate[0]}/${splitDate[2]}`);
 	}
-	return splitDate;
+	return date;
 }
 
 function getSpecificDateConquers(specificDate) {
-	let todayConquers = '';
-	let countConquers = 0;
-
+	let listDateConquers = [];
 	for(let index = 0; index < listConquers.length; index++) {
 		if (listConquers[index].date_string.getFullYear() == specificDate.getFullYear() && listConquers[index].date_string.getMonth() == specificDate.getMonth() && listConquers[index].date_string.getDate() == specificDate.getDate()) {
-			todayConquers += generateStringConquer(listConquers[index]);
-			countConquers++;
+			listDateConquers.push(listConquers[index]);
 		}
 	}
-	sendConquers(countConquers, todayConquers);
+	const messages = prepareConquersToSend(listDateConquers);
+	sendConquers(listDateConquers.length, messages);	
 } 
 
 function getLastConquers(count = 0) {

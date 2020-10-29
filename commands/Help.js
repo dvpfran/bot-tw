@@ -31,6 +31,6 @@ module.exports = {
 		for (let index = 0; index < listHelp.length; index++) {
 			commands += `${listHelp[index]}\n`;
 		}
-		Webhook.sendMessage(intro + commands + '```');
+		Webhook.sendMessage([intro + commands + '```']);
 	}
 }
