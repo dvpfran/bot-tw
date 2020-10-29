@@ -29,7 +29,11 @@ app.listen(3000, () => {
     console.log(`Server running on port 3000\n[DEBUG MODE]: ${config.get('debugMode')}`);
 
 	Gateway.initialize();
+	loadData();
+	timerRefreshData();
+});
 
+function loadData() {
 	TribalWars.getInfo(TribalWarsInfoType.WORLD, 'xml').then((result) => {
 		WorldSettings.loadInfo(result.config);
 
@@ -46,7 +50,7 @@ app.listen(3000, () => {
 						Ally.fillList(result);
 
 						TribalWars.getInfo(TribalWarsInfoType.VILLAGE).then((result) => {
-						Villages.getVillages(result);
+							Villages.getVillages(result);
 							
 							TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
 								TribalWars.getConquers(result);
@@ -57,4 +61,10 @@ app.listen(3000, () => {
 			});
 		});
 	});
-});
+}
+
+function timerRefreshData() {
+	setInterval(() => {
+		loadData();
+	}, 100000);
+}
