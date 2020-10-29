@@ -1,14 +1,15 @@
 const Webhook = require('../config/Webhook');
-const Command = require('./Command');
+const Player = require('./Player');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
 
 class Kill {
-	constructor(rank, id, score) {
+	constructor(rank, id, player_name, score) {
 		this.rank = rank;
 		this.id = id;
+		this.player_name = player_name;
 		this.score = score;
 	}
 }
@@ -34,7 +35,8 @@ function getKillList(filterType, number) {
 		TribalWars.getInfo(infoType).then((result) => {
 			for(let index = 0; index < result.length; index++) {
 				const item = result[index].split(',');
-				listKills.push(new Kill(item[0], item[1], item[2]));
+				const player_name = Player.getName(item[1]);
+				listKills.push(new Kill(item[0], item[1], player_name, item[2]));
 			}
 		}).then(() => {
 			sortListKills();
@@ -53,13 +55,18 @@ function sortListKills() {
 function sendKills(count) {
 	let listToSend = [];
 	for(let index = 0; index < count; index++) {
-		listToSend.push([listKills[index].rank, listKills[index].id, formatNumber(listKills[index].score)]);
+		listToSend.push([listKills[index].rank, listKills[index].player_name, formatNumber(listKills[index].score)]);
 	}
-	
+
 	Table.setInfoTable(listToSend, ['Rank', 'Nome', 'Derrotou']);
-	let message = `**Número de Jogadores: ${count}**\n`;
-	message += '```'+ Table.generateTable() +'```\n';
-	Webhook.sendMessage(message);
+	const splitedTable = Table.generateTable();
+	const messages = [];
+	messages.push(`**Número de Jogadores: ${count}**\n`);
+
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] +'```\n');
+	}
+	Webhook.sendMessage(messages);
 }
 
 module.exports = {	

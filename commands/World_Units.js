@@ -64,19 +64,14 @@ function prepareMessage(unitName, unit) {
 	listToSend.push([unitName, unit.pop, unit.speed, unit.attack, unit.defense, unit.defense_cavalry, unit.defense_archer, unit.carry]);
 
 	Table.setInfoTable(listToSend, columnsName);
-	let message = `**Unidades**\n`;
-	message += '```'+ Table.generateTable() +'```\n';
-	
-	sendMessage(message);
-}
+	let messages = [`**Unidades**\n`];
+	const splitedTable = Table.generateTable();
 
-function sendMessage(message) {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			Webhook.sendMessage(message);
-			resolve();
-		}, 800);
-	});
+	for(let index = 0; index < splitedTable.length; index++) {
+		 messages.push('```'+ Table.generateTable() +'```\n');
+	}
+	
+	Webhook.sendMessage(messages);
 }
 
 module.exports = {

@@ -48,21 +48,12 @@ function prepareMessage() {
 	Table.setInfoTable(listToSend, ['Descrição', 'Valores']);
 	let messageConfig = `**Configuração**\n`;
 	messageConfig += '```'+ Table.generateTable() + '```';
-	
-	sendMessage(messageGame).then(sendMessage(messageSnob).then(sendMessage(messageConfig)));
+
+	Webhook.sendMessage([messageGame, messageSnob, messageConfig]);
 }
 
 function getEnableString(value) {
 	return value == 1 ? 'Ativo' : 'Inativo';
-}
-
-function sendMessage(message) {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			Webhook.sendMessage(message);
-			resolve();
-		}, 800);
-	});
 }
 
 module.exports = {

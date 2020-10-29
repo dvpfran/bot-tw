@@ -99,20 +99,13 @@ function prepareMessage(buildingName, building) {
 	} 	
 
 	Table.setInfoTable(listToSend, columnsName);
-	let messageBuilding = '```'+ Table.generateTable()  +'```';
+	const splitedTable = Table.generateTable();
+	let messages = [message];
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index]  +'```');
+	}
 
-	sendMessage(message).then(() => {
-		sendMessage(messageBuilding);
-	});
-}
-
-function sendMessage(message) {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			Webhook.sendMessage(message);
-			resolve();
-		}, 800);
-	});
+	Webhook.sendMessage(messages);
 }
 
 module.exports = {

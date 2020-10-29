@@ -46,13 +46,13 @@ function getTopVillage(number) {
 	sendPlayers(number, listTopVillages);
 }
 
-function getTopPoints(number) {
+function getTopRank(number) {
 	sortPlayers(SortType.RANK);
-	let listTopPoints = [];
+	let listTopRank = [];
 	for(let index = 0; index < number; index++) {
-		listTopPoints.push(generateArrayPlayer(listPlayers[index]));
+		listTopRank.push(generateArrayPlayer(listPlayers[index]));
      }
-    sendPlayers(number, listTopPoints);
+    sendPlayers(number, listTopRank);
 }
 
 function generateArrayPlayer(player) {
@@ -62,10 +62,16 @@ function generateArrayPlayer(player) {
 
 function sendPlayers(count, players) {
 	Table.setInfoTable(players, ['Rank', 'Pontos', 'Aldeias', 'Nome']);
-	players = '```'+ Table.generateTable() + '```\n';
-	players = `**Número de Jogadores: ${count}**\n${players}`;
+
+	var splitedTable = Table.generateTable();
+
+	const messages = [];	
+	messages.push(`**Número de Jogadores: ${count}**`);
 	
-    Webhook.sendMessage(players);
+	for(let index = 0; index < splitedTable.length; index++) {
+		messages.push('```'+ splitedTable[index] + '```');
+	}
+	Webhook.sendMessage(messages);	
 }
 
 function getName(id) {
@@ -74,6 +80,10 @@ function getName(id) {
 		return player.name;
 	}
 	return undefined;
+}
+
+function getPlayerByName(name) {
+	return listPlayers.find(player => player.name.toLowerCase() === name.toLowerCase());
 }
 
 module.exports = {
@@ -86,7 +96,7 @@ module.exports = {
     	}
     },
     checkCommand: function(args) {
-        const filterType = args[0];
+		const filterType = args[0];
         const filter = args[1];
 
         if (filter.includes('top')) {
@@ -95,10 +105,18 @@ module.exports = {
                 getTopVillage(number);
             }
             else if (filterType === 'rank') {
-                getTopPoints(number);
+                getTopRank(number);
             }
         }
+		else {
+			const player_name = args.toString().replace(',', ' ');
+			const player = getPlayerByName(player_name);	
+			if (player !== undefined) {
+				sendPlayers(1, [generateArrayPlayer(player)]); 
+			}
+		}
     }
 }
 
 module.exports.getName = getName;
+module.exports.getPlayerByName = getPlayerByName;

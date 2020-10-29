@@ -20,48 +20,59 @@ function checkCommand(type) {
 		}
 	}
 	else {
-		let splitDate = null;
-
-		if (type.includes('-')) { 
-			splitDate = type.split('-');			
-		} 
-		else if (type.includes('/')) {
-			splitDate = type.split('/');
+		const dateConquer = convertToValidDate(type);
+		if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
+			getSpecificDateConquers(dateConquer);
 		}
-
-		if (splitDate != null) {
-			const date = new Date(`${splitDate[0]}/${splitDate[1]}/${splitDate[2]}`);
-
-			if (date != 'Invalid Date' && !isNaN(new Date(date))) {
-				getSpecificDateConquers(date);
-			}
-		}	
+		else {
+			const player_name = type.toString().replace(',', ' ');	
+			getPlayerConquers(player_name);
+		}
 	}
 }
 
-function getSpecificDateConquers(specificDate) {
-	let todayConquers = '';
-	let countConquers = 0;
+function convertToValidDate(type) {
+	let splitDate = null;
+	let date = null;
 
+	if (type.includes('-')) { 
+		splitDate = type.split('-');			
+	} 
+	else if (type.includes('/')) {
+		splitDate = type.split('/');
+	}
+
+	if (splitDate != null) {
+		date = new Date(`${splitDate[1]}/${splitDate[0]}/${splitDate[2]}`);
+	}
+	return date;
+}
+
+function getSpecificDateConquers(specificDate) {
+	let listDateConquers = [];
 	for(let index = 0; index < listConquers.length; index++) {
 		if (listConquers[index].date_string.getFullYear() == specificDate.getFullYear() && listConquers[index].date_string.getMonth() == specificDate.getMonth() && listConquers[index].date_string.getDate() == specificDate.getDate()) {
-			todayConquers += generateStringConquer(listConquers[index]);
-			countConquers++;
+			listDateConquers.push(listConquers[index]);
 		}
 	}
-	sendConquers(countConquers, todayConquers);
+	const messages = prepareConquersToSend(listDateConquers);
+	sendConquers(listDateConquers.length, messages);	
 } 
 
 function getLastConquers(count = 0) {
-	let lastConquers = '';
-	let countConquers = 0;
+	let listLastConquers = [];
 	const conquersLength = listConquers.length - 1;
-
-	for(let index = conquersLength; index > (conquersLength - count); index--) {
-		lastConquers += generateStringConquer(listConquers[index]);
-		countConquers++;
+	for(let index = conquersLength; index > conquersLength - count; index--) {
+		listLastConquers.push(listConquers[index]);
 	}
-	sendConquers(countConquers, lastConquers);
+	const messages = prepareConquersToSend(listLastConquers);	
+	sendConquers(listLastConquers.length, messages);
+}
+
+function getPlayerConquers(name) {
+	let listPlayerConquers = listConquers.filter(conquer => conquer.new_owner !== undefined && conquer.new_owner.toLowerCase() === name.toLowerCase());
+	const messages = prepareConquersToSend(listPlayerConquers);
+	sendConquers(listPlayerConquers.length, messages);
 }
 
 function generateStringConquer(conquer) {
@@ -73,10 +84,30 @@ function generateStringConquer(conquer) {
 	return message + '\n';
 }
 
-function sendConquers(count, conquers) {
-	conquers = '```' + conquers + '```';
-	conquers = `**Número de Conquistas: ${count}**\n${conquers}`;
-	Webhook.sendMessage(conquers.substring(0, 2000));	
+function prepareConquersToSend(listConquers) {
+	let listMessages = [];
+	let contentMessage = '';
+
+	listConquers.map((conquer, index = 0) => {
+		let generatedString = generateStringConquer(conquer);
+		if (contentMessage.length + generatedString.length >= 1800) {
+			listMessages.push(contentMessage);
+			contentMessage = generatedString;
+		}
+		else {
+			contentMessage += generatedString;
+			if (index + 1 === listConquers.length) {
+				listMessages.push(contentMessage);
+			}
+		}
+	});
+	return listMessages;
+}
+
+function sendConquers(count, messages) {
+	let listMessages = [`**Número de Conquistas: ${count}**\n`];
+	messages.map(message => listMessages.push('```'+ message +'```'));
+	Webhook.sendMessage(listMessages);	
 }
 
 module.exports.checkCommand = checkCommand;
