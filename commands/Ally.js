@@ -51,7 +51,6 @@ function checkCommand(args) {
 		}
     }
 	else {
-		console.log(args);
 		const ally_name = args.toString().replace(',', ' ').toLowerCase();
 		const ally = listAllies.find(ally => ally.name.toLowerCase() === ally_name || ally.tag.toLowerCase() === ally_name);
 		if (ally !== undefined) {

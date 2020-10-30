@@ -6,7 +6,6 @@ let messages = [];
 let indexMessage = 0;
 
 function sendWebhookMessage(message) {
-    console.log(message.length);
 	setTimeout(() => {
 		fetch(config.get('WebhookConfig.url'), {
     	    'method': 'POST',

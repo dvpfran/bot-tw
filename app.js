@@ -66,5 +66,5 @@ function loadData() {
 function timerRefreshData() {
 	setInterval(() => {
 		loadData();
-	}, 100000);
+	}, 600000);
 }

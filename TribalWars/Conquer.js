@@ -45,5 +45,4 @@ function getConquers(result) {
 }
 
 module.exports.getConquers = getConquers;
-module.exports.checkNewConquers = checkNewConquers;
 module.exports.listConquers = listConquers;
