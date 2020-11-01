@@ -23,15 +23,18 @@ rl.on('line', (input) => {
 	Command.checkCommand(input);
 });
 
-var app = express();
+const PORT = process.env.PORT || 3000;
+const INDEX = '/index.html';
 
-app.listen(3000, () => {
-    console.log(`Server running on port 3000\n[DEBUG MODE]: ${config.get('debugMode')}`);
+const server = express()
+	.use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+	.listen(PORT, () => {
+		console.log(`Server running on port ${PORT}\n[DEBUG MODE]: ${config.get('debugMode')}`);
 
-	Gateway.initialize();
-	loadData();
-	timerRefreshData();
-});
+		Gateway.initialize();
+		loadData();
+		timerRefreshData();
+	});
 
 function loadData() {
 	TribalWars.getInfo(TribalWarsInfoType.WORLD, 'xml').then((result) => {
