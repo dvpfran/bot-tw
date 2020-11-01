@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Table = require('../tools/generate-table/generate_table');
@@ -49,7 +49,7 @@ function prepareMessage() {
 	let messageConfig = `**Configuração**\n`;
 	messageConfig += '```'+ Table.generateTable() + '```';
 
-	Webhook.sendMessage([messageGame, messageSnob, messageConfig]);
+	Message.send([messageGame, messageSnob, messageConfig]);
 }
 
 function getEnableString(value) {

@@ -3,7 +3,6 @@ const readline = require('readline');
 const config = require('config');
 
 const Gateway = require('./config/Gateway');
-const Webhook = require('./config/Webhook');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('./config/Enums');
 const Command = require('./commands/Command');
 const WorldSettings = require('./commands/World_Settings');

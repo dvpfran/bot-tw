@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
@@ -111,7 +111,7 @@ function sendAllies(listTop) {
 		messages.push('```'+ splitedTable[index] +'```');
 	}
 
-	Webhook.sendMessage(messages);
+	Message.send(messages);
 }
 
 module.exports.fillList = fillList;

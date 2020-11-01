@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Conquer = require('../TribalWars/Conquer');
@@ -107,7 +107,7 @@ function prepareConquersToSend(listConquers) {
 function sendConquers(count, messages) {
 	let listMessages = [`**Número de Conquistas: ${count}**\n`];
 	messages.map(message => listMessages.push('```'+ message +'```'));
-	Webhook.sendMessage(listMessages);	
+	Message.send(listMessages);	
 }
 
 module.exports.checkCommand = checkCommand;

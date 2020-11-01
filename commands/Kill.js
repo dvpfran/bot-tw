@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Player = require('./Player');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
@@ -66,7 +66,7 @@ function sendKills(count) {
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```\n');
 	}
-	Webhook.sendMessage(messages);
+	Message.send(messages);
 }
 
 module.exports = {	

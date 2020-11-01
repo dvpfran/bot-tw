@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 
@@ -31,6 +31,6 @@ module.exports = {
 		for (let index = 0; index < listHelp.length; index++) {
 			commands += `${listHelp[index]}\n`;
 		}
-		Webhook.sendMessage([intro + commands + '```']);
+		Message.send([intro + commands + '```']);
 	}
 }

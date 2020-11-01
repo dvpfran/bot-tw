@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
@@ -71,7 +71,7 @@ function prepareMessage(unitName, unit) {
 		 messages.push('```'+ Table.generateTable() +'```\n');
 	}
 	
-	Webhook.sendMessage(messages);
+	Message.send(messages);
 }
 
 module.exports = {

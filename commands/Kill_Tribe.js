@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const Ally = require('./Ally');
 const TribalWars = require('../TribalWars/TribalWars');
@@ -67,7 +67,7 @@ function sendKills(count) {
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```\n');
 	}
-	Webhook.sendMessage(messages);
+	Message.send(messages);
 }
 
 module.exports = {
