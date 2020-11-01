@@ -10,7 +10,7 @@ let debugMode = config.get('debugMode');
 
 function initialize() {
 	if (!debugMode) {
-    	ws = new WebSocket(config.get('GatewayConfig.address'), {});
+    	ws = new WebSocket(config.get('Discord.url_gateway'), {});
 		ws.on('open', wsOpen);
 		ws.on('message', wsMessage);
 		ws.on('error', wsError);
@@ -26,17 +26,17 @@ function wsMessage(data) {
     data = JSON.parse(data);
     if (!debugMode) {
 		if (data.op === GatewayOPCodes.HELLO) {
-        	sendIdentify();
+			sendIdentify();
         	startTimerHearbeat(data.d.heartbeat_interval);
     	}
     	else if (data.op === GatewayOPCodes.EVENT) {
         	if (data.t === 'MESSAGE_CREATE') {
             	if (data.d.content.startsWith('!')) {
-                	Command.checkCommand(data.d.content);
+	            	Command.checkCommand({channel_id: data.d.channel_id, guild_id: data.d.guild_id, command: data.d.content});
             	}
-        	}
-    	}
-	}
+    		}	
+		}
+	}	
 }
 
 function wsError(data) {
@@ -57,7 +57,7 @@ function sendIdentify() {
     const identify = {
         "op": GatewayOPCodes.IDENTIFY,
         "d": {
-            "token": config.get('GatewayConfig.token'),
+            "token": config.get('Discord.bot_token'),
             "properties": {
                 "$os": process.platform,
                 "$browser": "disco",
