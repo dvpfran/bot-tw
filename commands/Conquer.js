@@ -6,7 +6,6 @@ const Conquer = require('../TribalWars/Conquer');
 let listConquers = null;
 
 function checkCommand(contentMessage) {
-	console.log(contentMessage);
 	const command = contentMessage.command;
 	const filter = command[1];
 
@@ -90,7 +89,7 @@ function generateStringConquer(conquer) {
 }
 
 function prepareConquersToSend(listConquers) {
-	let listMessages = [];
+	let listMessages = [`**Número de Conquistas: ${listConquers.length}**\n`];
 	let contentMessage = '';
 
 	listConquers.map((conquer, index = 0) => {
@@ -110,8 +109,15 @@ function prepareConquersToSend(listConquers) {
 }
 
 function sendConquers(channel_id, guild_id, messages) {
-	let listMessages = [`**Número de Conquistas: ${messages.length}**\n`];
-	messages.map(message => listMessages.push('```'+ message +'```'));
+	let listMessages = [];
+	messages.map((message, index) => {
+		if(index !== 0) {
+			listMessages.push('```'+ message +'```')
+		}
+		else {
+			listMessages.push(message);
+		}
+	});
 	Message.send(channel_id, guild_id, listMessages);	
 }
 

@@ -113,7 +113,9 @@ module.exports = {
             }
         }
 		else {
-			const player_name = filterType.toString().replace(',', ' ');
+			let player_name = command;
+		    player_name.splice(0, 1);	
+			player_name = player_name.toString().replace(',', ' ');
 			const player = getPlayerByName(player_name);
 			if (player !== undefined) {
 				listToSend.push(generateArrayPlayer(player));

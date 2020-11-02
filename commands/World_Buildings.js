@@ -90,7 +90,7 @@ function prepareMessage(channel_id ,guild_id, buildingName, building) {
 	let nextIron = building.iron;
 	let nextPop = building.pop;
 
-	for(let index = 0; index <= building.max_level; index++) {
+	for(let index = 0; index < building.max_level; index++) {
 		listToSend.push([index + 1, formatNumber(Math.round(nextWood)), formatNumber(Math.round(nextStone)), 
 									formatNumber(Math.round(nextIron)), formatNumber(Math.round(nextPop))]);
 		
