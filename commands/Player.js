@@ -1,6 +1,7 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
+const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
 
@@ -43,7 +44,7 @@ function getTopVillage(number) {
     for(let index = 0; index < number; index++) {
 		listTopVillages.push(generateArrayPlayer(listPlayers[index]));
     }
-	sendPlayers(number, listTopVillages);
+	return listTopVillages;
 }
 
 function getTopRank(number) {
@@ -51,27 +52,27 @@ function getTopRank(number) {
 	let listTopRank = [];
 	for(let index = 0; index < number; index++) {
 		listTopRank.push(generateArrayPlayer(listPlayers[index]));
-     }
-    sendPlayers(number, listTopRank);
+    }
+   	return listTopRank;
 }
 
 function generateArrayPlayer(player) {
-	let list = [player.rank, player.points, player.villages, player.name];
+	let list = [player.rank, formatNumber(player.points), player.villages, player.name];
 	return list;
 }
 
-function sendPlayers(count, players) {
+function sendPlayers(channel_id, guild_id, players) {
 	Table.setInfoTable(players, ['Rank', 'Pontos', 'Aldeias', 'Nome']);
 
 	var splitedTable = Table.generateTable();
 
-	const messages = [];	
-	messages.push(`**Número de Jogadores: ${count}**`);
+	let messages = [];	
+	messages.push(`**Número de Jogadores: ${players.length}**`);
 	
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] + '```');
 	}
-	Webhook.sendMessage(messages);	
+	Message.send(channel_id, guild_id, messages);
 }
 
 function getName(id) {
@@ -95,25 +96,31 @@ module.exports = {
 			}
     	}
     },
-    checkCommand: function(args) {
-		const filterType = args[0];
-        const filter = args[1];
+    checkCommand: function(contentMessage) {
+		const command = contentMessage.command;
+		const filterType = command[1];
+        const filter = command.length > 2 ? command[2] : '';
 
+		let listToSend = [];
         if (filter.includes('top')) {
             const number = parseInt(filter.substr('top'.length));
+
             if (filterType === 'villages') {
-                getTopVillage(number);
+                listToSend = getTopVillage(number);
             }
             else if (filterType === 'rank') {
-                getTopRank(number);
+                listToSend = getTopRank(number);
             }
         }
 		else {
-			const player_name = args.toString().replace(',', ' ');
-			const player = getPlayerByName(player_name);	
+			const player_name = filterType.toString().replace(',', ' ');
+			const player = getPlayerByName(player_name);
 			if (player !== undefined) {
-				sendPlayers(1, [generateArrayPlayer(player)]); 
+				listToSend.push(generateArrayPlayer(player));
 			}
+		}
+		if(listToSend.length > 0) {
+			sendPlayers(contentMessage.channel_id, contentMessage.guild_id, listToSend);
 		}
     }
 }

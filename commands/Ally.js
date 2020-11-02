@@ -34,28 +34,34 @@ function fillList(result) {
 	}
 }
 
-function checkCommand(args) {
-	const filterType = args[0];
-    const filter = args[1];
+function checkCommand(contentMessage) {
+	const command = contentMessage.command;
+	const filterType = command[1];
+    const filter = command.length > 2 ? command[2] : '';
 
+    let listToSend = [];
     if (filter.includes('top')) {
-    	const number = parseInt(filter.substr('top'.length));
+		const number = parseInt(filter.substr('top'.length));
+
         if (filterType === 'villages') {
-        	getTopList(number, SortType.VILLAGES);
+        	listToSend = getTopList(number, SortType.VILLAGES);
         }
         else if (filterType === 'rank') {
-        	getTopList(number, SortType.RANK);
+        	listToSend = getTopList(number, SortType.RANK);
         }
 		else if (filterType === 'members') {
-			getTopList(number, SortType.MEMBERS);
+			listToSend = getTopList(number, SortType.MEMBERS);
 		}
     }
 	else {
-		const ally_name = args.toString().replace(',', ' ').toLowerCase();
+		const ally_name = filterType.toString().replace(',', ' ').toLowerCase();
 		const ally = listAllies.find(ally => ally.name.toLowerCase() === ally_name || ally.tag.toLowerCase() === ally_name);
 		if (ally !== undefined) {
-			getAlly(ally);
+			listToSend.push(getAlly(ally));
 		}
+	}
+	if(listToSend.length > 0) {
+		sendAllies(contentMessage.channel_id, contentMessage.guild_id, listToSend);
 	}
 }
 
@@ -67,11 +73,11 @@ function getTopList(number, sortType) {
 		const ally = listAllies[index];
 		listTop.push([ally.rank, ally.name, formatNumber(ally.points), ally.members, ally.villages]);
 	}
-	sendAllies(listTop);
+	return listTop;
 }
 
 function getAlly(ally) {
-	sendAllies([[ally.rank, ally.name, formatNumber(ally.points), ally.members, ally.villages]]);
+	return [ally.rank, ally.name, formatNumber(ally.points), ally.members, ally.villages];
 }
 
 function sortAllies(type) {
@@ -98,20 +104,20 @@ function getName(id) {
 	return undefined;
 }
 
-function sendAllies(listTop) {
+function sendAllies(channel_id, guild_id, listTop) {
 	let message = '';
 	Table.setInfoTable(listTop, ['Rank', 'Nome', 'Pontos', 'Membros', 'Aldeias']);
 
 	const splitedTable = Table.generateTable();
 
 	const messages = [];
-	messages.push(`**Números de Tribos: ${listTop.length}\n`);
+	messages.push(`**Números de Tribos: ${listTop.length}**\n`);
 
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```');
 	}
 
-	Message.send(messages);
+	Message.send(channel_id, guild_id, messages);
 }
 
 module.exports.fillList = fillList;

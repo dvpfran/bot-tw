@@ -14,15 +14,14 @@ class Kill {
 	}
 }
 
-let listKills = [];
-
-function getKillList(filterType, number) {
+function getKillList(contentMessage, filterType, number) {
+	let listKills = [];
 	let infoType = null;
 	switch(filterType) {
 		case 'all':
 			infoType = TribalWarsInfoType.KILL_ALL;
 			break;
-		case 'atack':
+		case 'attack':
 			infoType = TribalWarsInfoType.KILL_ATT;
 			break;
 		case 'defense':
@@ -39,45 +38,45 @@ function getKillList(filterType, number) {
 				listKills.push(new Kill(item[0], item[1], player_name, item[2]));
 			}
 		}).then(() => {
-			sortListKills();
+			listKills.sort((a, b) => {
+				return a.rank - b.rank;
+			});
 		}).then(() => {
-			sendKills(number);
+			let sortedList = [];
+			for(let index = 0; index < number; index++) {
+				sortedList.push([listKills[index].rank, listKills[index].player_name, formatNumber(listKills[index].score)]);
+			}
+			
+			if(sortedList.length > 0) {
+				sendKills(contentMessage.channel_id, contentMessage.guild_id, sortedList);
+			}
 		});		
 	}
 }
 
-function sortListKills() {
-	listKills.sort((a, b) => {
-		return a.rank - b.rank;
-	});
-}
+function sendKills(channel_id, guild_id, kills) {
+	Table.setInfoTable(kills, ['Rank', 'Nome', 'Derrotou']);
 
-function sendKills(count) {
-	let listToSend = [];
-	for(let index = 0; index < count; index++) {
-		listToSend.push([listKills[index].rank, listKills[index].player_name, formatNumber(listKills[index].score)]);
-	}
-
-	Table.setInfoTable(listToSend, ['Rank', 'Nome', 'Derrotou']);
 	const splitedTable = Table.generateTable();
 	const messages = [];
-	messages.push(`**Número de Jogadores: ${count}**\n`);
+	messages.push(`**Número de Jogadores: ${kills.length}**\n`);
 
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```\n');
 	}
-	Message.send(messages);
+	Message.send(channel_id, guild_id, messages);
 }
 
 module.exports = {	
-	checkCommand: function(args) {
-		const filterType = args[0];
-		const filter = args[1];
-
+	checkCommand: function(contentMessage) {
+		const command = contentMessage.command;
+		const filterType = command[1];
+		const filter = command[2];
+		
 		if (filter.includes('top')) {
 			const number = parseInt(filter.substr('top'.length));
-			if (filterType === 'all' ||  filterType === 'atack' || filterType === 'defense') {
-				getKillList(filterType, number);
+			if (filterType === 'all' ||  filterType === 'attack' || filterType === 'defense') {
+				getKillList(contentMessage, filterType, number);
 			}
 		}
 	}

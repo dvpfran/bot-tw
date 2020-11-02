@@ -6,11 +6,12 @@ const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
 
 let worldSettings = undefined;
 
-function checkCommand() {
-	prepareMessage();
+function checkCommand(contentMessage) {
+	prepareMessage(contentMessage);
 }
 
-function prepareMessage() {
+function prepareMessage(contentMessage) {
+	console.log(contentMessage);
 	let listToSend = [];
 
 	listToSend.push(['Velocidade do jogo', worldSettings.speed]);
@@ -49,7 +50,7 @@ function prepareMessage() {
 	let messageConfig = `**Configuração**\n`;
 	messageConfig += '```'+ Table.generateTable() + '```';
 
-	Message.send([messageGame, messageSnob, messageConfig]);
+	Message.send(contentMessage.channel_id, contentMessage.guild_id, [messageGame, messageSnob, messageConfig]);
 }
 
 function getEnableString(value) {

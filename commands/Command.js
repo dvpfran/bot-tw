@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 
+const Settings = require('./Settings');
 const WorldSettings = require('./World_Settings');
 const WorldBuildings = require('./World_Buildings');
 const WorldUnits = require('./World_Units');
@@ -10,63 +11,47 @@ const Conquer = require('./Conquer');
 const Kill = require('./Kill');
 const KillTribe = require('./Kill_Tribe');
 
-function checkCommandType(content) {
-	content = content.split(' ');
-    if (content.length >= 3) {
-        const commandType = content[0].substring(1);
-        const args = [content[1], content[2]];
+function checkCommandType(contentMessage) {
+	contentMessage.command = contentMessage.command.split(' ');
+	const commandType = contentMessage.command[0].substring(1);
     
-        switch(commandType) {
-            case 'player':
-                Player.checkCommand(args);
-                break;
-			case 'ally':
-				Ally.checkCommand(args);
-				break;
-			case 'kill':
-				Kill.checkCommand(args);
-				break;
-			case 'kill_ally':
-				KillTribe.checkCommand(args);
-				break;
-			case 'conquer':
-				Conquer.checkCommand(args);
-				break;
-			case 'world':
-				switch(args[0]) {
-					case 'buildings':
-						WorldBuildings.checkCommand(args);
-						break;
-					case 'units':
-						WorldUnits.checkCommand(args);
-						break;
-				}
-				break;
-        }
+	switch(commandType) {
+		case 'player':
+        	Player.checkCommand(contentMessage);
+            break;
+		case 'ally':
+			Ally.checkCommand(contentMessage);
+			break;
+		case 'kill':
+			Kill.checkCommand(contentMessage);
+			break;
+		case 'kill_ally':
+			KillTribe.checkCommand(contentMessage);
+			break;
+		case 'conquer':
+			Conquer.checkCommand(contentMessage);
+			break;
+		case 'world':
+			const commandParam = contentMessage.command[1];
+			switch(commandParam) {
+				case 'settings':
+					WorldSettings.checkCommand(contentMessage);
+					break;
+				case 'buildings':
+					WorldBuildings.checkCommand(contentMessage);
+					break;
+				case 'units':
+					WorldUnits.checkCommand(contentMessage);
+					break;
+			}
+			break;
+		case 'settings':
+			Settings.checkCommand(contentMessage);
+			break;
+		case 'help':
+			Help.sendHelp(contentMessage);
+			break;
     }
-	else if (content.length == 2 && content[0] == '!player') {
-		Player.checkCommand(content[1]);
-	}
-	else if (content.length == 2 && content[0] == '!ally') {
-		Ally.checkCommand(content[1]);
-	}
-	else if (content.length == 2 && content[0] == '!world') {
-		if (content[1] === 'settings') {
-			WorldSettings.checkCommand(content[1]);
-		}
-		else if (content[1] === 'buildings') {
-			WorldBuildings.checkCommand(content[1]);
-		}
-		else if (content[1] === 'units') {
-			WorldUnits.checkCommand(content[1]);
-		}
-	}
-	else if (content.length == 2 && content[0] == '!conquer') {
-		Conquer.checkCommand(content[1]);
-	}
-	else if (content.length <= 1 && content[0] == '!help') {
-		Help.sendHelp();
-	}
 }
 
 module.exports = {

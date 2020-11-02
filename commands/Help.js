@@ -15,10 +15,10 @@ const listHelp = [
 	'!conquer today',
 	'!conquer [date]',
 	'!kill all top[number]',
-	'!kill atack top[number]',
+	'!kill attack top[number]',
 	'!kill defense top[number]',
 	'!kill_ally all top[number]',
-	'!kill_ally atack top[number]',
+	'!kill_ally attack top[number]',
 	'!kill_ally defense top[number]',
 	'!world settings',
 	'!world buildings [name]',
@@ -26,11 +26,11 @@ const listHelp = [
 ];
 
 module.exports = {
-	sendHelp: function() {
+	sendHelp: function(contentMessage) {
 		let commands = '```';
 		for (let index = 0; index < listHelp.length; index++) {
 			commands += `${listHelp[index]}\n`;
 		}
-		Message.send([intro + commands + '```']);
+		Message.send(contentMessage.channel_id, contentMessage.guild_id, [intro + commands + '```']);
 	}
 }
