@@ -1,4 +1,3 @@
-const Webhook = require('../config/Webhook');
 const TribalWars = require('./TribalWars');
 const { TribalWarsInfoType } = require('../config/Enums');
 const Player = require('../commands/Player');
@@ -44,19 +43,5 @@ function getConquers(result) {
 	}
 }
 
-function checkNewConquers() {
-	setInterval(() => {
-		const date = new Date();
-		const hours = '0' + date.getHours();
-		const minutes = '0' + date.getMinutes();
-		const seconds = '0' + date.getSeconds();
-		
-		TribalWars.getInfo(TribalWarsInfoType.CONQUER).then((result) => {
-			getConquers(result);
-		});
-	}, 100000);
-}
-
 module.exports.getConquers = getConquers;
-module.exports.checkNewConquers = checkNewConquers;
 module.exports.listConquers = listConquers;

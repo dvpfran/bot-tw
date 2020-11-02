@@ -1,7 +1,7 @@
 const config = require('config');
 
 const selectedWorld = config.get('TribalWarsConfig.world');
-const selectedServer= config.get('TribalWarsConfig.server');
+const selectedServer = config.get('TribalWarsConfig.server');
 
 const TribalWarsInfo = {
     selected_world: selectedWorld,

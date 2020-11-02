@@ -1,4 +1,3 @@
-const Webhook = require('../config/Webhook');
 const TribalWars = require('../TribalWars/TribalWars');
 const { TribalWarsInfoType } = require('../config/Enums');
 const Player = require('../commands/Player');

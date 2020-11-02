@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Table = require('../tools/generate-table/generate_table');
@@ -6,11 +6,12 @@ const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
 
 let worldSettings = undefined;
 
-function checkCommand() {
-	prepareMessage();
+function checkCommand(contentMessage) {
+	prepareMessage(contentMessage);
 }
 
-function prepareMessage() {
+function prepareMessage(contentMessage) {
+	console.log(contentMessage);
 	let listToSend = [];
 
 	listToSend.push(['Velocidade do jogo', worldSettings.speed]);
@@ -49,7 +50,7 @@ function prepareMessage() {
 	let messageConfig = `**Configuração**\n`;
 	messageConfig += '```'+ Table.generateTable() + '```';
 
-	Webhook.sendMessage([messageGame, messageSnob, messageConfig]);
+	Message.send(contentMessage.channel_id, contentMessage.guild_id, [messageGame, messageSnob, messageConfig]);
 }
 
 function getEnableString(value) {

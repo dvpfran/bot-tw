@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
@@ -7,12 +7,14 @@ const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
 
 let worldBuildings = undefined;
 
-function checkCommand(args, specificLevel = 0) {
-	let buildingArg = Array.isArray(args) ? args[1] : args;
+function checkCommand(contentMessage, specificLevel = 0) {
+	const command = contentMessage.command;
+	let buildingArg = command.length > 2 ? command[2] : command[1];
 	let building = undefined;
+
 	switch(buildingArg) {
 		case 'buildings':
-			building = worldBuildings;
+			//building = worldBuildings;
 			break;
 		case 'main':
 			building = worldBuildings.main;
@@ -67,11 +69,11 @@ function checkCommand(args, specificLevel = 0) {
 			break;
 	}
 	if (building !== undefined) {
-		prepareMessage(buildingArg, building);
+		prepareMessage(contentMessage.channel_id, contentMessage.guild_id, buildingArg, building);
 	}
 }
 
-function prepareMessage(buildingName, building) {
+function prepareMessage(channel_id ,guild_id, buildingName, building) {
 	let listToSend = [];
 	let columnsName = ['Edifício', 'Nível Mínimo', 'Nível Máximo'];
 	listToSend.push([buildingName, building.min_level, building.max_level]);
@@ -105,7 +107,7 @@ function prepareMessage(buildingName, building) {
 		messages.push('```'+ splitedTable[index]  +'```');
 	}
 
-	Webhook.sendMessage(messages);
+	Message.send(channel_id, guild_id, messages);
 }
 
 module.exports = {

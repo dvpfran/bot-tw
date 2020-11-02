@@ -1,33 +1,41 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Conquer = require('../TribalWars/Conquer');
 
 let listConquers = null;
 
-function checkCommand(type) {
+function checkCommand(contentMessage) {
+	console.log(contentMessage);
+	const command = contentMessage.command;
+	const filter = command[1];
+
 	listConquers = Conquer.listConquers;
-	if (type == 'today') {
-		getSpecificDateConquers(new Date());
+	let listToSend = [];
+	if (filter == 'today') {
+		listToSend = getSpecificDateConquers(new Date());
 	}
-	else if (type == 'last') {
-		getLastConquers();
+	else if (filter == 'last') {
+		listToSend = getLastConquers();
 	}
-	else if (type.includes('last')) {
-		const countConquers = type.substring('last'.length);
+	else if (filter.includes('last')) {
+		const countConquers = filter.substring('last'.length);
 		if (!isNaN(countConquers)) {
-			getLastConquers(countConquers);
+			listToSend = getLastConquers(countConquers);
 		}
 	}
 	else {
 		const dateConquer = convertToValidDate(type);
 		if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
-			getSpecificDateConquers(dateConquer);
+			listToSend = getSpecificDateConquers(dateConquer);
 		}
 		else {
-			const player_name = type.toString().replace(',', ' ');	
-			getPlayerConquers(player_name);
+			const player_name = filter.toString().replace(',', ' ');	
+			listToSend = getPlayerConquers(player_name);
 		}
+	}
+	if(listConquers.length > 0) {
+		sendConquers(contentMessage.channel_id, contentMessage.guild_id, listToSend);
 	}
 }
 
@@ -55,8 +63,7 @@ function getSpecificDateConquers(specificDate) {
 			listDateConquers.push(listConquers[index]);
 		}
 	}
-	const messages = prepareConquersToSend(listDateConquers);
-	sendConquers(listDateConquers.length, messages);	
+	return prepareConquersToSend(listDateConquers);
 } 
 
 function getLastConquers(count = 0) {
@@ -65,14 +72,12 @@ function getLastConquers(count = 0) {
 	for(let index = conquersLength; index > conquersLength - count; index--) {
 		listLastConquers.push(listConquers[index]);
 	}
-	const messages = prepareConquersToSend(listLastConquers);	
-	sendConquers(listLastConquers.length, messages);
+	return prepareConquersToSend(listLastConquers);
 }
 
 function getPlayerConquers(name) {
 	let listPlayerConquers = listConquers.filter(conquer => conquer.new_owner !== undefined && conquer.new_owner.toLowerCase() === name.toLowerCase());
-	const messages = prepareConquersToSend(listPlayerConquers);
-	sendConquers(listPlayerConquers.length, messages);
+	return prepareConquersToSend(listPlayerConquers);
 }
 
 function generateStringConquer(conquer) {
@@ -104,10 +109,10 @@ function prepareConquersToSend(listConquers) {
 	return listMessages;
 }
 
-function sendConquers(count, messages) {
-	let listMessages = [`**Número de Conquistas: ${count}**\n`];
+function sendConquers(channel_id, guild_id, messages) {
+	let listMessages = [`**Número de Conquistas: ${messages.length}**\n`];
 	messages.map(message => listMessages.push('```'+ message +'```'));
-	Webhook.sendMessage(listMessages);	
+	Message.send(channel_id, guild_id, listMessages);	
 }
 
 module.exports.checkCommand = checkCommand;

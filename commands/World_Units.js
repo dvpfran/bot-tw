@@ -1,4 +1,4 @@
-const Webhook = require('../config/Webhook');
+const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
@@ -7,8 +7,9 @@ const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
 
 let worldUnits = undefined;
 
-function checkCommand(args) {
-	let unitArg = Array.isArray(args) ? args[1] : args;
+function checkCommand(contentMessage) {
+	const command = contentMessage.command;
+	let unitArg = command.length > 2 ? command[2] : command[1];
 	let unit = undefined;
 
 	switch(unitArg) {
@@ -53,11 +54,11 @@ function checkCommand(args) {
 			break;
 	}
 	if (unit !== undefined) {
-		prepareMessage(unitArg, unit);
+		prepareMessage(contentMessage, unitArg, unit);
 	}
 }
 
-function prepareMessage(unitName, unit) {
+function prepareMessage(contentMessage, unitName, unit) {
 	let listToSend = [];
 	let columnsName = ['Unidade', 'Pop', 'Velocidade', 'Ataque', 'Defesa', 'Defesa Cavalaria', 'Defesa Arqueiro', 'Carga'];
 
@@ -71,7 +72,7 @@ function prepareMessage(unitName, unit) {
 		 messages.push('```'+ Table.generateTable() +'```\n');
 	}
 	
-	Webhook.sendMessage(messages);
+	Message.send(contentMessage.channel_id, contentMessage.guild_id, messages);
 }
 
 module.exports = {
