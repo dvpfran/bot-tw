@@ -7,34 +7,36 @@ let listConquers = null;
 
 function checkCommand(contentMessage) {
 	const command = contentMessage.command;
-	const filter = command[1];
+	const filter = command.length > 2 ? command.splice(1, 2).toString() : command[1];
 
-	listConquers = Conquer.listConquers;
-	let listToSend = [];
-	if (filter == 'today') {
-		listToSend = getSpecificDateConquers(new Date());
-	}
-	else if (filter == 'last') {
-		listToSend = getLastConquers();
-	}
-	else if (filter.includes('last')) {
-		const countConquers = filter.substring('last'.length);
-		if (!isNaN(countConquers)) {
-			listToSend = getLastConquers(countConquers);
+
+	if(filter !== undefined) {
+		listConquers = Conquer.listConquers;
+		let listToSend = [];
+		if (filter == 'today') {
+			listToSend = getSpecificDateConquers(new Date());
 		}
-	}
-	else {
-		const dateConquer = convertToValidDate(type);
-		if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
-			listToSend = getSpecificDateConquers(dateConquer);
+		else if (filter == 'last') {
+			listToSend = getLastConquers();
+		}
+		else if (filter.includes('last')) {
+			const countConquers = filter.substring('last'.length);
+			if (!isNaN(countConquers)) {
+				listToSend = getLastConquers(countConquers);
+			}
 		}
 		else {
-			const player_name = filter.toString().replace(',', ' ');	
-			listToSend = getPlayerConquers(player_name);
+			const dateConquer = convertToValidDate(filter);
+			if (dateConquer != 'Invalid Date' && dateConquer != null && !isNaN(new Date(dateConquer))) {
+				listToSend = getSpecificDateConquers(dateConquer);
+			}
+			else {
+				const player_name = filter.toString().replace(',', ' ');
+			}
 		}
-	}
-	if(listConquers.length > 0) {
-		sendConquers(contentMessage.channel_id, contentMessage.guild_id, listToSend);
+		if(listToSend.length > 0) {
+			sendConquers(contentMessage.channel_id, contentMessage.guild_id, listToSend);
+		}	
 	}
 }
 
@@ -65,7 +67,7 @@ function getSpecificDateConquers(specificDate) {
 	return prepareConquersToSend(listDateConquers);
 } 
 
-function getLastConquers(count = 0) {
+function getLastConquers(count = 1) {
 	let listLastConquers = [];
 	const conquersLength = listConquers.length - 1;
 	for(let index = conquersLength; index > conquersLength - count; index--) {
@@ -89,22 +91,25 @@ function generateStringConquer(conquer) {
 }
 
 function prepareConquersToSend(listConquers) {
-	let listMessages = [`**Número de Conquistas: ${listConquers.length}**\n`];
+	let listMessages = [];
 	let contentMessage = '';
 
-	listConquers.map((conquer, index = 0) => {
-		let generatedString = generateStringConquer(conquer);
-		if (contentMessage.length + generatedString.length >= 1800) {
-			listMessages.push(contentMessage);
-			contentMessage = generatedString;
-		}
-		else {
-			contentMessage += generatedString;
-			if (index + 1 === listConquers.length) {
+	if(listConquers.length > 0) {
+		listMessages.push(`**Número de Conquistas: ${listConquers.length}**\n`);
+		listConquers.map((conquer, index = 0) => {
+			let generatedString = generateStringConquer(conquer);
+			if (contentMessage.length + generatedString.length >= 1800) {
 				listMessages.push(contentMessage);
+				contentMessage = generatedString;
 			}
-		}
-	});
+			else {
+				contentMessage += generatedString;
+				if (index + 1 === listConquers.length) {
+					listMessages.push(contentMessage);
+				}
+			}
+		});
+	}
 	return listMessages;
 }
 

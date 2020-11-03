@@ -13,7 +13,7 @@ const listHelp = [
 	'!ally [name] OR [tag]',
 	'!conquer last[number]',
 	'!conquer today',
-	'!conquer [date]',
+	'!conquer [dd/mm/yyyy]',
 	'!kill all top[number]',
 	'!kill attack top[number]',
 	'!kill defense top[number]',

@@ -54,7 +54,9 @@ function checkCommand(contentMessage) {
 		}
     }
 	else {
-		const ally_name = filterType.toString().replace(',', ' ').toLowerCase();
+		let ally_name = command;
+		ally_name.splice(0, 1);
+		ally_name = ally_name.toString().replace(',', ' ').toLowerCase();
 		const ally = listAllies.find(ally => ally.name.toLowerCase() === ally_name || ally.tag.toLowerCase() === ally_name);
 		if (ally !== undefined) {
 			listToSend.push(getAlly(ally));

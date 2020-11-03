@@ -71,12 +71,14 @@ module.exports = {
 	checkCommand: function(contentMessage) {
 		const command = contentMessage.command;
 		const filterType = command[1];
-		const filter = command[2];
-		
-		if (filter.includes('top')) {
+		const filter = command.length > 2 ? command[2] : '';
+	
+		if(filter.includes('top')) {
 			const number = parseInt(filter.substr('top'.length));
-			if (filterType === 'all' ||  filterType === 'attack' || filterType === 'defense') {
-				getKillList(contentMessage, filterType, number);
+			if(!isNaN(number)) {
+				if (filterType === 'all' ||  filterType === 'attack' || filterType === 'defense') {
+					getKillList(contentMessage, filterType, number);
+				}
 			}
 		}
 	}
