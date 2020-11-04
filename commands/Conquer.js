@@ -82,10 +82,10 @@ function getPlayerConquers(name) {
 }
 
 function generateStringConquer(conquer) {
-	let message = `- ${conquer.new_owner} conquistou ${conquer.village_id}`;
+	let message = `- ${conquer.new_owner} ${language.conquered} ${conquer.village_id}`;
 	let countConquers = 0;
 	if (conquer.old_owner !== undefined) {
-		 message += ` de ${conquer.old_owner}`;
+		 message += ` ${language.of} ${conquer.old_owner}`;
 	}
 	return message + '\n';
 }
@@ -95,7 +95,7 @@ function prepareConquersToSend(listConquers) {
 	let contentMessage = '';
 
 	if(listConquers.length > 0) {
-		listMessages.push(`**Número de Conquistas: ${listConquers.length}**\n`);
+		listMessages.push(`**${language.conquer_number}: ${listConquers.length}**\n`);
 		listConquers.map((conquer, index = 0) => {
 			let generatedString = generateStringConquer(conquer);
 			if (contentMessage.length + generatedString.length >= 1800) {

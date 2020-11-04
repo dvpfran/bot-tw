@@ -11,15 +11,20 @@ function setInfoTable(infoData, infoColumns) {
 }
 
 function generateColumnsSize() {
-	for(let indexColumn = 0; indexColumn < columns.length; indexColumn++) {	
-		let column_width = columns[indexColumn].length;
-		for(let indexData = 0; indexData < data.length; indexData++) {
-			if (data[indexData][indexColumn].length > column_width) {
-				column_width = data[indexData][indexColumn].length;
-			}		
+//	try {
+		for(let indexColumn = 0; indexColumn < columns.length; indexColumn++) {	
+			let column_width = columns[indexColumn].length;
+			for(let indexData = 0; indexData < data.length; indexData++) {
+				if (data[indexData][indexColumn].length > column_width) {
+					column_width = data[indexData][indexColumn].length;
+				}		
+			}
+			table.column_width[indexColumn] = column_width + 5;
 		}
-		table.column_width[indexColumn] = column_width + 5;
-	}
+/*	}
+	catch(error) {
+		console.log('ERROR:', error);
+	}*/
 }
 
 function generateBorder() {
@@ -120,8 +125,17 @@ function alignLeftWord(word, indexColumn) {
 }
 
 function generateTable() {
-	generateColumnsSize();
-	return generateRows();
+	let table = undefined;
+	try {
+		generateColumnsSize();
+		table = generateRows();
+	}
+	catch(error) {
+		console.log('[ERROR]', error);
+		table = undefined;
+	}
+	console.log(table);
+	return table;
 }
 
 module.exports.setInfoTable = setInfoTable;

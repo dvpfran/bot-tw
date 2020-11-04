@@ -1,9 +1,12 @@
+const config = require('config');
+
 const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
+const { language } = require(`../languages/language`);
 
 class Player {
     constructor(id, name, tribe_id, villages, points, rank) {
@@ -62,12 +65,11 @@ function generateArrayPlayer(player) {
 }
 
 function sendPlayers(channel_id, guild_id, players) {
-	Table.setInfoTable(players, ['Rank', 'Pontos', 'Aldeias', 'Nome']);
+	Table.setInfoTable(players, [language.rank, language.points, language.villages, language.name]);
 
 	var splitedTable = Table.generateTable();
 
 	let messages = [];	
-	messages.push(`**Número de Jogadores: ${players.length}**`);
 	
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] + '```');

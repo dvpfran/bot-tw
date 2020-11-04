@@ -1,8 +1,9 @@
 const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
+const { language } = require('../languages/language');
 
-const intro = '**List of Commands that you can use:**\n';
+const intro = `**${language.intro_help_command}:**\n`;
 const listHelp = [
 	'!player villages top[number]',
 	'!player rank top[number]',

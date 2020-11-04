@@ -4,6 +4,7 @@ const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
+const { language } = require('../languages/language');
 
 let worldUnits = undefined;
 
@@ -60,12 +61,12 @@ function checkCommand(contentMessage) {
 
 function prepareMessage(contentMessage, unitName, unit) {
 	let listToSend = [];
-	let columnsName = ['Unidade', 'Pop', 'Velocidade', 'Ataque', 'Defesa', 'Defesa Cavalaria', 'Defesa Arqueiro', 'Carga'];
+	let columnsName = [language.name, 'Pop', language.speed, language.attack, language.defense, language.cavalry_defense, language.archer_defense, language.haul];
 
-	listToSend.push([unitName, unit.pop, unit.speed, unit.attack, unit.defense, unit.defense_cavalry, unit.defense_archer, unit.carry]);
+	listToSend.push([language.units_obj[unitName], unit.pop, parseInt(unit.speed), unit.attack, unit.defense, unit.defense_cavalry, unit.defense_archer, unit.carry]);
 
 	Table.setInfoTable(listToSend, columnsName);
-	let messages = [`**Unidades**\n`];
+	let messages = [`**${language.units}**\n`];
 	const splitedTable = Table.generateTable();
 
 	for(let index = 0; index < splitedTable.length; index++) {

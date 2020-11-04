@@ -3,6 +3,7 @@ const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
+const { language } = require('../languages/language');
 
 let worldSettings = undefined;
 
@@ -11,50 +12,56 @@ function checkCommand(contentMessage) {
 }
 
 function prepareMessage(contentMessage) {
-	console.log(contentMessage);
 	let listToSend = [];
 
-	listToSend.push(['Velocidade do jogo', worldSettings.speed]);
-	listToSend.push(['Velocidade das unidades', worldSettings.unit_speed]);
-	listToSend.push(['Demolir edifício', getEnableString(worldSettings.build.destroy)]);
-	listToSend.push(['Moral', worldSettings.moral]);
-	listToSend.push(['Igreja', getEnableString(worldSettings.game.church)]);
-	listToSend.push(['Torre de vigia', getEnableString(worldSettings.game.watchtower)]);
-	listToSend.push(['Pontos Aldeias Bárbaras', worldSettings.game.barbarian_max_points]);
-	listToSend.push(['Tempo para cancelar ataques', worldSettings.commands.command_cancel_time]);
-	listToSend.push(['Tempo para cancelar transportes de mercado', worldSettings.misc.trade_cancel_time]);
-	listToSend.push(['Bónus Noturno', `${worldSettings.night.start_hour} às ${worldSettings.night.end_hour}`]);
-	listToSend.push(['Proteção de novatos', `${worldSettings.newbie.days} dias`]);
-	listToSend.push(['Arqueiros', getEnableString(worldSettings.game.archers)]);
+	const lang_units = language.units_obj;
+	const lang_buildings = language.buildings_obj;
+	const lang_settings = language.world_settings;
+
+	listToSend.push([lang_settings.game_speed, worldSettings.speed]);
+	listToSend.push([lang_settings.unit_speed, worldSettings.unit_speed]);
+	listToSend.push([lang_settings.demolish_building, getEnableString(worldSettings.build.destroy)]);
+	listToSend.push([lang_settings.morale, worldSettings.moral]);
+	listToSend.push([lang_buildings.church, getEnableString(worldSettings.game.church)]);
+	listToSend.push([lang_buildings.watchtower, getEnableString(worldSettings.game.watchtower)]);
+	listToSend.push([lang_settings.barbarian_points, worldSettings.game.barbarian_max_points]);
+	listToSend.push([lang_settings.time_cancel_attack, worldSettings.commands.command_cancel_time]);
+	listToSend.push([lang_settings.time_cancel_transport, worldSettings.misc.trade_cancel_time]);
+	listToSend.push([lang_settings.night_bonus, `${worldSettings.night.start_hour} ${language.until} ${worldSettings.night.end_hour}`]);
+	listToSend.push([lang_settings.protection_beginners, `${worldSettings.newbie.days} ${language.days}`]);
+	listToSend.push([lang_units.archer, getEnableString(worldSettings.game.archers)]);
 	
-	Table.setInfoTable(listToSend, ['Descrição', 'Valores']);
+	Table.setInfoTable(listToSend, [language.description, language.values]);
 	
-	let messageGame = `**Configurações Mundo ??**\n`;
+	let messageGame = `**${language.settings}**\n`;
 	messageGame += '```'+ Table.generateTable() + '```\n';
 
 	listToSend = [];
-	listToSend.push(['Comprado com', worldSettings.snob.gold]);
-	listToSend.push(['Distância máxima', worldSettings.snob.max_dist]);
-	listToSend.push(['Aumenta lealdade por hora', worldSettings.snob.rise]);
+	listToSend.push([lang_settings.nobleman_purchased_using, worldSettings.snob.gold]);
+	listToSend.push([lang_settings.nobleman_distance, worldSettings.snob.max_dist]);
+	listToSend.push([lang_settings.loyalty_increase, worldSettings.snob.rise]);
 
-	Table.setInfoTable(listToSend, ['Descrição', 'Valores']);	
+	Table.setInfoTable(listToSend, [language.description, language.values]);	
 
-	let messageSnob = `**Nobre**\n`;
+	let messageSnob = `**${lang_units.snob}**\n`;
 	messageSnob += '```'+ Table.generateTable() + '```\n';
 
-	listToSend = [];
-	listToSend.push(['Limite de membros tribo', worldSettings.ally.limit]);
-	listToSend.push(['Níveis da tribo', getEnableString(worldSettings.ally.levels)]);
+	console.log(listToSend);
 
-	Table.setInfoTable(listToSend, ['Descrição', 'Valores']);
-	let messageConfig = `**Configuração**\n`;
+	listToSend = [];
+	listToSend.push([lang_settings.tribe_member_limit, worldSettings.ally.limit]);
+	listToSend.push([lang_settings.tribe_levels, getEnableString(worldSettings.ally.levels)]);
+
+
+	Table.setInfoTable(listToSend, [language.description, language.values]);
+	let messageConfig = `**${language.configuration}**\n`;
 	messageConfig += '```'+ Table.generateTable() + '```';
 
 	Message.send(contentMessage.channel_id, contentMessage.guild_id, [messageGame, messageSnob, messageConfig]);
 }
 
 function getEnableString(value) {
-	return value == 1 ? 'Ativo' : 'Inativo';
+	return value == 1 ? language.active : language.inactive;
 }
 
 module.exports = {

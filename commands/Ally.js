@@ -3,6 +3,7 @@ const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
+const { language } = require('../languages/language');
 
 class Ally {
 	constructor(id, name, tag, members, villages, points, all_points, rank) {
@@ -108,13 +109,10 @@ function getName(id) {
 
 function sendAllies(channel_id, guild_id, listTop) {
 	let message = '';
-	Table.setInfoTable(listTop, ['Rank', 'Nome', 'Pontos', 'Membros', 'Aldeias']);
+	Table.setInfoTable(listTop, [language.rank, language.name, language.points, language.members, language.villages]);
 
 	const splitedTable = Table.generateTable();
-
 	const messages = [];
-	messages.push(`**Números de Tribos: ${listTop.length}**\n`);
-
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```');
 	}

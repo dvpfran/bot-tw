@@ -4,6 +4,7 @@ const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('../config/Enums');
+const { language } = require('../languages/language');
 
 let worldBuildings = undefined;
 
@@ -75,16 +76,16 @@ function checkCommand(contentMessage, specificLevel = 0) {
 
 function prepareMessage(channel_id ,guild_id, buildingName, building) {
 	let listToSend = [];
-	let columnsName = ['Edifício', 'Nível Mínimo', 'Nível Máximo'];
-	listToSend.push([buildingName, building.min_level, building.max_level]);
+	let columnsName = [language.name, `${language.level} >=`, `${language.level} <=`];
+	listToSend.push([language.buildings_obj[buildingName], building.min_level, building.max_level]);
 
 	Table.setInfoTable(listToSend, columnsName);
-	let message = `**Edifícios**\n`;
+	let message = '**'+ language.buildings +'**\n';
 	message += '```'+ Table.generateTable() +'```\n';
 	
 	listToSend = [];
 	
-	columnsName = ['Nível', 'Madeira', 'Argila', 'Ferro', 'Pop'];
+	columnsName = [language.level, language.wood, language.stone, language.iron, 'Pop'];
 	let nextWood = building.wood;
 	let nextStone = building.stone;
 	let nextIron = building.iron;

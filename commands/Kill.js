@@ -4,6 +4,7 @@ const TribalWars = require('../TribalWars/TribalWars');
 const { formatNumber } = require('../tools/geralFunctions');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
+const { language } = require('../languages/language');
 
 class Kill {
 	constructor(rank, id, player_name, score) {
@@ -55,11 +56,10 @@ function getKillList(contentMessage, filterType, number) {
 }
 
 function sendKills(channel_id, guild_id, kills) {
-	Table.setInfoTable(kills, ['Rank', 'Nome', 'Derrotou']);
+	Table.setInfoTable(kills, [language.rank, language.name, language.defeated]);
 
 	const splitedTable = Table.generateTable();
 	const messages = [];
-	messages.push(`**Número de Jogadores: ${kills.length}**\n`);
 
 	for(let index = 0; index < splitedTable.length; index++) {
 		messages.push('```'+ splitedTable[index] +'```\n');
