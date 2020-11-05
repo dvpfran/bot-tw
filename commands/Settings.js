@@ -1,25 +1,42 @@
+const config = require('config');
 
+const database = require('../config/Database');
 const Message = require('../config/Message');
 const Command = require('./Command');
 const TribalWars = require('../TribalWars/TribalWars');
 const Table = require('../tools/generate-table/generate_table');
 const { TribalWarsInfoType, GatewayOPCodes } = require('../config/Enums');
-const config = require('config');
 
-function checkCommand(args) {
-	const param = args[0];
-	const value = args[1];
-
-	switch(param) {
-		case 'server':
-			selectedServer = value;
-			break;
-		case 'world':
-			selectedWorld = value;
-			break;
+function checkCommand(contentMessage) {
+	if(contentMessage.command.length >= 3) {
+		const command = contentMessage.command;
+		const type = command[1];
+		let value = command;
+		value.splice(0, 2);
+		value = value.toString().replace(/\,/g, ' ');
+		console.log(value);
+		
+		if (type === 'server' || type === 'world' || type === 'language') {
+			setValue(contentMessage.channel_id, type, value);
+		}
 	}
-	console.log('selectedWorld:', selectedWorld);
-	console.log('selectedServer:', selectedServer);
+}
+
+function setValue(channel_id, field, value) {
+	let query = '';
+	let values = [];
+	
+	database.query('SELECT COUNT(*) FROM settings WHERE channel_id = $1', [channel_id]).then(result => {	
+		console.log('resultado:', result);
+		if (result[0].count ===  '1') {
+			database.query(`UPDATE settings SET ${field} = $1 WHERE channel_id = $2`, [value, channel_id]).then(result => { 
+				console.log('resultado:', result);	
+			});
+		}
+		else {
+			database.query(`INSERT INTO settings (channel_id, ${field}) VALUES($1, $2)`, [channel_id, value]);
+		}
+	});
 }
 
 function setDefaultValues() {

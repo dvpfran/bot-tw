@@ -2,6 +2,7 @@ const express = require('express');
 const readline = require('readline');
 const config = require('config');
 
+const Database = require('./config/Database');
 const Gateway = require('./config/Gateway');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('./config/Enums');
 const Command = require('./commands/Command');
@@ -30,9 +31,9 @@ const server = express()
 	.listen(PORT, () => {
 		console.log(`Server running on port ${PORT}\n[DEBUG MODE]: ${config.get('debugMode')}`);
 
+		Database.connect();
 		Gateway.initialize();
 		loadData();
-		timerRefreshData();
 	});
 
 function loadData() {
@@ -65,8 +66,3 @@ function loadData() {
 	});
 }
 
-function timerRefreshData() {
-	setInterval(() => {
-		loadData();
-	}, 600000);
-}
