@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
-
 const xml2js = require('xml2js');
 
+const App_Info = require('../app_info');
 const Conquer = require('./Conquer');
 const { TribalWarsInfoType } = require('../config/Enums');
 const { TribalWarsInfo } = require('../config/TribalWars');
@@ -53,7 +53,7 @@ function getUrlParam(type) {
     return urlParam;
 }
 
-function getInfo(type, fileType = 'txt') {
+function getInfo(channel_id, type, fileType = 'txt') {
 	return new Promise((resolve, reject) => {
    		const url = TribalWarsInfo.url;
         let urlParam = getUrlParam(type);

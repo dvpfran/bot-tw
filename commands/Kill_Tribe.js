@@ -17,6 +17,7 @@ class Kill_Tribe {
 }
 
 function getKillTribeList(contentMessage, filterType, number) {
+	const channel_id = contentMessage.channel_id;
 	let listKills = [];
 	let infoType = null;
 	switch(filterType) {
@@ -33,7 +34,7 @@ function getKillTribeList(contentMessage, filterType, number) {
 
 	if (infoType != null) {
 		listKills = [];
-		TribalWars.getInfo(infoType).then((result) => {
+		TribalWars.getInfo(channel_id, infoType).then((result) => {
 			for(let index = 0; index < result.length; index++) {
 				const item = result[index].split(',');
 				const name = Ally.getName(item[1]);

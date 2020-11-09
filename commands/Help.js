@@ -24,6 +24,8 @@ const listHelp = [
 	'!world settings',
 	'!world buildings [name]',
 	'!world units [name]',
+	'!list servers',
+	'!list languages'
 ];
 
 module.exports = {

@@ -4,6 +4,7 @@ const config = require('config');
 
 const Database = require('./config/Database');
 const Gateway = require('./config/Gateway');
+const App_Info = require('./app_info');
 const { TribalWarsInfoType, GatewayOPCodes  } = require('./config/Enums');
 const Command = require('./commands/Command');
 const WorldSettings = require('./commands/World_Settings');
@@ -33,11 +34,12 @@ const server = express()
 
 		Database.connect();
 		Gateway.initialize();
+		App_Info.initialize();
 		loadData();
 	});
 
 function loadData() {
-	TribalWars.getInfo(TribalWarsInfoType.WORLD, 'xml').then((result) => {
+/*	TribalWars.getInfo(TribalWarsInfoType.WORLD, 'xml').then((result) => {
 		WorldSettings.loadInfo(result.config);
 
 		TribalWars.getInfo(TribalWarsInfoType.BUILDINGS, 'xml').then((result) => {
@@ -63,6 +65,6 @@ function loadData() {
 				});
 			});
 		});
-	});
+	});*/
 }
 

@@ -16,6 +16,7 @@ class Kill {
 }
 
 function getKillList(contentMessage, filterType, number) {
+	const channel_id = contentMessage.channel_id;
 	let listKills = [];
 	let infoType = null;
 	switch(filterType) {
@@ -32,7 +33,7 @@ function getKillList(contentMessage, filterType, number) {
 	
 	if (infoType != null) {
 		listKills = [];
-		TribalWars.getInfo(infoType).then((result) => {
+		TribalWars.getInfo(channel_id, infoType).then((result) => {
 			for(let index = 0; index < result.length; index++) {
 				const item = result[index].split(',');
 				const player_name = Player.getName(item[1]);
@@ -49,7 +50,7 @@ function getKillList(contentMessage, filterType, number) {
 			}
 			
 			if(sortedList.length > 0) {
-				sendKills(contentMessage.channel_id, contentMessage.guild_id, sortedList);
+				sendKills(channel_id, contentMessage.guild_id, sortedList);
 			}
 		});		
 	}

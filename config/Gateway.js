@@ -2,6 +2,7 @@ const process = require('process');
 const config = require('config');
 const WebSocket = require("ws");
 
+const app_info = require('../app_info');
 const { GatewayOPCodes } = require('./Enums');
 const Command = require('../commands/Command');
 let ws = null;
@@ -34,7 +35,10 @@ function wsMessage(data) {
             	if (data.d.content.startsWith('!')) {
 	            	Command.checkCommand({channel_id: data.d.channel_id, guild_id: data.d.guild_id, command: data.d.content});
             	}
-    		}	
+    		}
+			else if(data.t === 'GUILD_CREATE') {
+				app_info.checkChannel(data.d.system_channel_id);
+			}	
 		}
 	}	
 }

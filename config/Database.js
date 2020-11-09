@@ -5,6 +5,7 @@ let pool;
 
 module.exports = {
 	connect: function() {
+		console.log('DATABASE CONNECT');
 		pool = new Pool({
 			user: config.get('Database.user'),
 			host: config.get('Database.host'),
